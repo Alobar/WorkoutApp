@@ -1,9 +1,11 @@
-package alobar.workout;
+package alobar.workout.views;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import alobar.workout.R;
 
 
 public class MainActivity extends AppCompatActivity {
