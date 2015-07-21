@@ -3,8 +3,10 @@ package alobar.workout.views;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.ContentValues;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +16,7 @@ import android.widget.Toast;
 
 import alobar.util.LineBuilder;
 import alobar.workout.R;
+import alobar.workout.provider.DatabaseContract;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -49,10 +52,8 @@ public class ExerciseDialog extends DialogFragment implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.saveButton:
-                String errors = validate();
-                if (!TextUtils.isEmpty(errors)) {
-                    Toast.makeText(getActivity(), errors, Toast.LENGTH_LONG).show();
-                } else {
+                if (validate()) {
+                    save();
                     getDialog().dismiss();
                 }
                 break;
@@ -64,20 +65,32 @@ public class ExerciseDialog extends DialogFragment implements View.OnClickListen
         }
     }
 
-    private String validate() {
+    private void save() {
+        String name = nameEdit.getText().toString().trim();
+        double weight = Double.parseDouble(weightEdit.getText().toString().trim());
+
+        ContentValues values = new ContentValues();
+        values.put(DatabaseContract.Exercise.NAME, name);
+        values.put(DatabaseContract.Exercise.WEIGHT, weight);
+        getActivity().getContentResolver().insert(DatabaseContract.Exercise.CONTENT_URI, values);
+    }
+
+    private boolean validate() {
         LineBuilder result = new LineBuilder();
         String nameText = nameEdit.getText().toString().trim();
         if (TextUtils.isEmpty(nameText)) {
             result.appendLine("Name is required");
         }
-        String weightText = weightEdit.getText().toString();
+        String weightText = weightEdit.getText().toString().trim();
         if (TextUtils.isEmpty(weightText)) {
             result.appendLine("Weight is required");
-        } else {
-            double weight = Double.parseDouble(weightText);
-            if (weight > 15)
-                result.appendLine("Weight: i don't believe you");
         }
-        return result.toString();
+
+        if (result.lenght() > 0) {
+            Toast.makeText(getActivity(), result.toString(), Toast.LENGTH_LONG).show();
+            return false;
+        } else {
+            return true;
+        }
     }
 }

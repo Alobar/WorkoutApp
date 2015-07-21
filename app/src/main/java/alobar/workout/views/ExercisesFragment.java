@@ -1,12 +1,20 @@
 package alobar.workout.views;
 
+import android.app.Fragment;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.app.ListFragment;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 
+import alobar.workout.R;
 import alobar.workout.adapters.ExerciseAdapter;
 import alobar.workout.provider.DatabaseContract;
 

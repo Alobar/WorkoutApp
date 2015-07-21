@@ -8,6 +8,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
+import java.sql.SQLClientInfoException;
+
 /**
  * Created by rob on 20/07/15.
  */
@@ -44,22 +46,30 @@ public class DatabaseProvider extends ContentProvider {
 
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+        Cursor result;
         switch (uriMatcher.match(uri)) {
             case ROUTE_EXERCISE_DIR:
-                return Exercise.query(mOpenHelper.getReadableDatabase(), projection, selection, selectionArgs, sortOrder);
+                result = Exercise.query(mOpenHelper.getReadableDatabase(), projection, selection, selectionArgs, sortOrder);
+                break;
             default:
                 throw new UnsupportedOperationException();
         }
+        result.setNotificationUri(getContext().getContentResolver(), uri);
+        return result;
     }
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
+        Uri result;
         switch (uriMatcher.match(uri)) {
             case ROUTE_EXERCISE_DIR:
-                return null;
+                result = Exercise.insert(mOpenHelper.getWritableDatabase(), values);
+                break;
             default:
                 throw new UnsupportedOperationException();
         }
+        getContext().getContentResolver().notifyChange(result, null);
+        return result;
     }
 
     @Override
@@ -85,6 +95,11 @@ public class DatabaseProvider extends ContentProvider {
     private static class Exercise {
         public static Cursor query(SQLiteDatabase db, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
             return db.query(DatabaseContract.Exercise.ENTITY_NAME, projection, selection, selectionArgs, null, null, sortOrder);
+        }
+
+        public static Uri insert(SQLiteDatabase db, ContentValues values) {
+            long id = db.insert(DatabaseContract.Exercise.ENTITY_NAME, null, values);
+            return id != -1 ? Uri.withAppendedPath(DatabaseContract.Exercise.CONTENT_URI, Long.toString(id)) : null;
         }
     }
 }

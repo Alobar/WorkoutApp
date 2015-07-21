@@ -14,4 +14,8 @@ public class LineBuilder {
     public String toString() {
         return result.toString();
     }
+
+    public int lenght() {
+        return result.length();
+    }
 }
