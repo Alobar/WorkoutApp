@@ -4,6 +4,6 @@
     <string name="drawer_open">Open menu</string>
     <string name="drawer_close">Sluit menu</string>
 
-<!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Navigation</string>
+    <string name="exercise_add">Toevoegen</string>
+
 </resources>
