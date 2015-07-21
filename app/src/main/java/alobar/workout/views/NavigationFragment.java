@@ -44,7 +44,9 @@ public class NavigationFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.addExerciseItem:
-                Toast.makeText(getActivity(), "Clicked", Toast.LENGTH_LONG).show();
+
+                ExerciseDialog dialog = new ExerciseDialog();
+                dialog.show(getFragmentManager(), ExerciseDialog.class.getName());
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

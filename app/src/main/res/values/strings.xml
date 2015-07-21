@@ -2,8 +2,11 @@
     <string name="app_name">Alobar Workout</string>
 
     <string name="drawer_open">Open menu</string>
-    <string name="drawer_close">Sluit menu</string>
+    <string name="drawer_close">Close menu</string>
 
-    <string name="exercise_add">Toevoegen</string>
+    <string name="exercise_add">Add</string>
+    <string name="exercise_name_hint">Name</string>
+    <string name="exercise_weight_hint">Weight</string>
+    <string name="exercise_dialog_title">Exercise</string>
 
 </resources>

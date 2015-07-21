@@ -11,7 +11,7 @@ import alobar.workout.provider.DatabaseContract;
  */
 public class ExerciseAdapter extends SimpleCursorAdapter {
     private static String[] FROM = new String[] {DatabaseContract.Exercise.NAME, DatabaseContract.Exercise.WEIGHT};
-    private static int[] TO = new int[] {R.id.nameText, R.id.weightText};
+    private static int[] TO = new int[] {R.id.nameEdit, R.id.weightEdit};
     public ExerciseAdapter(Context context) {
         super(context, R.layout.item_exercise, null, FROM, TO, 0);
     }
