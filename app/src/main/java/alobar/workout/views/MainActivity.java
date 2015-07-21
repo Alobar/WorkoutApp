@@ -1,60 +1,36 @@
 package alobar.workout.views;
 
-import android.app.LoaderManager;
-import android.content.Context;
-import android.content.CursorLoader;
-import android.content.Loader;
-import android.database.Cursor;
+import android.app.Activity;
 import android.os.Bundle;
-import android.provider.ContactsContract;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import alobar.workout.R;
-import alobar.workout.provider.DatabaseContract;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int LOADER_EXERCISES = 1;
-
-    private ExerciseAdapter exerciseAdapter;
+    private ActionBarDrawerToggle drawerToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        exerciseAdapter = new ExerciseAdapter(this);
-        ListView exerciseList = (ListView) findViewById(R.id.exerciseList);
-        exerciseList.setAdapter(exerciseAdapter);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-        getLoaderManager().initLoader(LOADER_EXERCISES, null, exercisesLoader);
+        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
+        drawerLayout.setDrawerListener(drawerToggle);
     }
 
-    private static class ExerciseAdapter extends SimpleCursorAdapter {
-        private static String[] FROM = new String[] {DatabaseContract.Exercise.NAME, DatabaseContract.Exercise.WEIGHT};
-        private static int[] TO = new int[] {R.id.nameText, R.id.weightText};
-        public ExerciseAdapter(Context context) {
-            super(context, R.layout.item_exercise, null, FROM, TO, 0);
-        }
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        drawerToggle.syncState();
     }
-
-    private LoaderManager.LoaderCallbacks<Cursor> exercisesLoader = new LoaderManager.LoaderCallbacks<Cursor>() {
-        @Override
-        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-            return new CursorLoader(getApplicationContext(), DatabaseContract.Exercise.CONTENT_URI, null, null, null, null);
-        }
-
-        @Override
-        public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-            exerciseAdapter.changeCursor(data);
-        }
-
-        @Override
-        public void onLoaderReset(Loader<Cursor> loader) {
-            exerciseAdapter.changeCursor(null);
-        }
-    };
 }
