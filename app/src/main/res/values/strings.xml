@@ -8,6 +8,8 @@
     <string name="exercise_name_hint">Name</string>
     <string name="exercise_weight_hint">Weight</string>
     <string name="exercise_dialog_title">Exercise</string>
-    <string name="item_exervise_menu_remove">Remove</string>
+    <string name="menu_item_exercise_remove">Remove</string>
+    <string name="menu_item_exercise_edit">Edit</string>
+    <string name="fragment_exercises_empty_text">Loading data or empty...</string>
 
 </resources>
