@@ -22,4 +22,12 @@
         android:layout_height="wrap_content"
         tools:text="[weight]" />
 
+    <ImageButton
+        style="@style/ImageButton.Secondary"
+        android:id="@+id/menuButton"
+        android:layout_width="@dimen/min_touch_slop"
+        android:layout_height="@dimen/min_touch_slop"
+        android:src="@drawable/ic_more_vert_black_24dp"
+        android:contentDescription="@string/menu_open" />
+
 </LinearLayout>

@@ -74,12 +74,17 @@ public class DatabaseProvider extends ContentProvider {
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
+        int affected;
         switch (uriMatcher.match(uri)) {
             case ROUTE_EXERCISE_DIR:
-                return 0;
+                affected = Exercise.delete(mOpenHelper.getWritableDatabase(), selection, selectionArgs);
+                break;
             default:
                 throw new UnsupportedOperationException();
         }
+        if (affected > 0)
+            getContext().getContentResolver().notifyChange(uri, null);
+        return affected;
     }
 
     @Override
@@ -100,6 +105,10 @@ public class DatabaseProvider extends ContentProvider {
         public static Uri insert(SQLiteDatabase db, ContentValues values) {
             long id = db.insert(DatabaseContract.Exercise.ENTITY_NAME, null, values);
             return id != -1 ? Uri.withAppendedPath(DatabaseContract.Exercise.CONTENT_URI, Long.toString(id)) : null;
+        }
+
+        public static int delete(SQLiteDatabase db, String whereClause, String[] whereArgs) {
+            return db.delete(DatabaseContract.Exercise.ENTITY_NAME, whereClause, whereArgs);
         }
     }
 }

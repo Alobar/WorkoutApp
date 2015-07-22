@@ -1,12 +1,13 @@
 <resources>
     <string name="app_name">Alobar Workout</string>
 
-    <string name="drawer_open">Open menu</string>
-    <string name="drawer_close">Close menu</string>
+    <string name="menu_open">Open menu</string>
+    <string name="menu_close">Close menu</string>
 
     <string name="exercise_add">Add</string>
     <string name="exercise_name_hint">Name</string>
     <string name="exercise_weight_hint">Weight</string>
     <string name="exercise_dialog_title">Exercise</string>
+    <string name="item_exervise_menu_remove">Remove</string>
 
 </resources>

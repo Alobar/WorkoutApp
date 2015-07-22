@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Values from Material desgin guidelines
+         http://www.google.com/design/spec/style/color.html#color-ui-color-application -->
+    <item name="alpha_light_secondary" format="float" type="dimen">0.7</item>
+    <item name="alpha_light_disabled" format="float" type="dimen">0.3</item>
+    <item name="alpha_light_divider" format="float" type="dimen">0.12</item>
+
+</resources>

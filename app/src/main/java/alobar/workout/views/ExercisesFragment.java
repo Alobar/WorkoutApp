@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import alobar.workout.R;
 import alobar.workout.adapters.ExerciseAdapter;
@@ -31,6 +32,11 @@ public class ExercisesFragment extends ListFragment {
         super.onCreate(savedInstanceState);
         setListAdapter(new ExerciseAdapter(getActivity()));
         getLoaderManager().initLoader(LOADER_EXERCISES, null, exercisesLoader);
+    }
+
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+
     }
 
     @Override

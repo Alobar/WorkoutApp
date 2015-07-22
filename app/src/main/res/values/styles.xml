@@ -26,11 +26,19 @@
         <!--<item name="colorControlHighlight">@color/colorSecondary</item>-->
     </style>
 
+    <style name="ImageButton" parent="Widget.AppCompat.Button.Borderless">
+    </style>
+    <style name="ImageButton.Secondary">
+        <item name="android:alpha">@dimen/alpha_light_disabled</item>
+    </style>
+
     <style name="DialogButtonBar" parent="Widget.AppCompat.ButtonBar">
         <item name="android:gravity">right</item>
     </style>
-    <style name="DialogButton" parent="Base.Widget.AppCompat.Button.Borderless">
+
+    <style name="DialogButton" parent="Widget.AppCompat.Button.Borderless">
     </style>
+
     <style name="DialogButton.Primary">
         <item name="android:textColor">?colorPrimary</item>
     </style>
