@@ -12,7 +12,7 @@ import alobar.workout.R;
 import alobar.workout.provider.DatabaseContract;
 
 /**
- * Created by rob on 22/07/15.
+ * View Holder for Exercises
  */
 public class ExerciseHolder implements OnClickListener, PopupMenu.OnMenuItemClickListener {
 
@@ -50,6 +50,9 @@ public class ExerciseHolder implements OnClickListener, PopupMenu.OnMenuItemClic
                 String where = DatabaseContract.Exercise._ID + " = ?";
                 String[] whereArgs = new String[] { Long.toString(_id) };
                 context.getContentResolver().delete(DatabaseContract.Exercise.CONTENT_URI, where, whereArgs);
+                return true;
+            case R.id.editExerciseItem:
+                Toast.makeText(context, "TODO: Edit exercise", Toast.LENGTH_SHORT).show();
                 return true;
             default:
                 return false;

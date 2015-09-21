@@ -2,7 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/editExerciseItem"
+        android:title="@string/menu_item_exercise_edit"/>
+    <item
         android:id="@+id/removeExerciseItem"
-        android:title="@string/item_exervise_menu_remove" />
+        android:title="@string/menu_item_exercise_remove" />
 
 </menu>
