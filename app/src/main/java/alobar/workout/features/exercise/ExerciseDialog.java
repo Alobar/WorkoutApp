@@ -19,16 +19,25 @@ import android.widget.Toast;
 import alobar.android.text.DebouncingTextWatcher;
 import alobar.workout.R;
 import alobar.workout.database.DatabaseContract;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class ExerciseDialog extends DialogFragment implements ExercisePresenter.View, View.OnClickListener {
 
-    private TextInputLayout nameInput;
-    private EditText nameEdit;
-    private TextInputLayout weightInput;
-    private EditText weightEdit;
+    @BindView(R.id.nameInput)
+    TextInputLayout nameInput;
+    @BindView(R.id.nameEdit)
+    EditText nameEdit;
+    @BindView(R.id.weightInput)
+    TextInputLayout weightInput;
+    @BindView(R.id.weightEdit)
+    EditText weightEdit;
+
+    private Unbinder unbinder;
 
     private ExercisePresenter presenter;
 
@@ -54,10 +63,7 @@ public class ExerciseDialog extends DialogFragment implements ExercisePresenter.
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View result = inflater.inflate(R.layout.fragment_exercise_dialog, container, false);
 
-        nameInput = (TextInputLayout) result.findViewById(R.id.nameInput);
-        nameEdit = (EditText) result.findViewById(R.id.nameEdit);
-        weightInput = (TextInputLayout) result.findViewById(R.id.weightInput);
-        weightEdit = (EditText) result.findViewById(R.id.weightEdit);
+        unbinder = ButterKnife.bind(this, result);
 
         nameEdit.addTextChangedListener(new DebouncingTextWatcher() {
             @Override
@@ -76,6 +82,12 @@ public class ExerciseDialog extends DialogFragment implements ExercisePresenter.
         result.findViewById(R.id.cancelButton).setOnClickListener(this);
 
         return result;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 
     @Override
