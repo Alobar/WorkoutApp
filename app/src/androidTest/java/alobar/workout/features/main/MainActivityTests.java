@@ -1,11 +1,9 @@
 package alobar.workout.features.main;
 
-import android.support.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
 import android.support.test.rule.ActivityTestRule;
 
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import alobar.workout.R;
 
