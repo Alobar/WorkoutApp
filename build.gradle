@@ -12,6 +12,11 @@ buildscript {
     }
 }
 
+ext {
+    androidBuildToolsVersion = "24.0.1"
+    supportLibraryVersion = '24.1.1'
+}
+
 allprojects {
     repositories {
         jcenter()
