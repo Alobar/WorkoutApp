@@ -1,4 +1,4 @@
-package alobar.workout.views;
+package alobar.workout.features.exercise;
 
 
 import android.app.Dialog;
@@ -6,7 +6,6 @@ import android.app.DialogFragment;
 import android.content.ContentValues;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,9 +13,8 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import alobar.util.LineBuilder;
 import alobar.workout.R;
-import alobar.workout.provider.DatabaseContract;
+import alobar.workout.database.DatabaseContract;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -76,21 +74,21 @@ public class ExerciseDialog extends DialogFragment implements View.OnClickListen
     }
 
     private boolean validate() {
-        LineBuilder result = new LineBuilder();
+        StringBuilder messages = new StringBuilder();
+
         String nameText = nameEdit.getText().toString().trim();
         if (TextUtils.isEmpty(nameText)) {
-            result.appendLine("Name is required");
+            messages.append("Name is required\n");
         }
         String weightText = weightEdit.getText().toString().trim();
         if (TextUtils.isEmpty(weightText)) {
-            result.appendLine("Weight is required");
+            messages.append("Weight is required\n");
         }
 
-        if (result.lenght() > 0) {
-            Toast.makeText(getActivity(), result.toString(), Toast.LENGTH_LONG).show();
-            return false;
-        } else {
-            return true;
-        }
+        boolean result = messages.length() == 0;
+        if (!result)
+            Toast.makeText(getActivity(), messages.toString(), Toast.LENGTH_LONG).show();
+
+        return result;
     }
 }

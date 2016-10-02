@@ -1,7 +1,6 @@
-package alobar.workout.adapters;
+package alobar.workout.features.exercise;
 
 import android.content.Context;
-import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -9,7 +8,7 @@ import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import alobar.workout.R;
-import alobar.workout.provider.DatabaseContract;
+import alobar.workout.database.DatabaseContract;
 
 /**
  * View Holder for Exercises

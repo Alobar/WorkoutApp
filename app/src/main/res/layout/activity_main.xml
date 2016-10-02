@@ -1,33 +1,26 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include
+    <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
-        layout="@layout/toolbar" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        app:title="@string/app_name"
+        app:titleTextAppearance="@style/TextAppearance.AppCompat.Large.Inverse"
+        tools:ignore="Overdraw"/>
 
-    <android.support.v4.widget.DrawerLayout
-        android:id="@+id/drawerLayout"
+    <fragment
+        android:id="@+id/exercisesFragment"
+        android:name="alobar.workout.features.exercise.ExercisesFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MainActivity">
+        tools:layout="@layout/fragment_exercises"/>
 
-
-        <fragment
-            android:id="@+id/exercisesFragment"
-            android:name="alobar.workout.views.ExercisesFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <fragment
-            android:id="@+id/navigationFragment"
-            android:name="alobar.workout.views.NavigationFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="left"
-            tools:layout="@layout/fragment_navigation" />
-
-    </android.support.v4.widget.DrawerLayout>
 </LinearLayout>

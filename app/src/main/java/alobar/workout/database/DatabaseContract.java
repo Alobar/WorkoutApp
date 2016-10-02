@@ -1,4 +1,4 @@
-package alobar.workout.provider;
+package alobar.workout.database;
 
 import android.net.Uri;
 import android.provider.BaseColumns;
@@ -6,7 +6,7 @@ import android.provider.BaseColumns;
 import alobar.workout.BuildConfig;
 
 /**
- * Created by rob on 20/07/15.
+ * Database contract
  */
 public class DatabaseContract {
 
@@ -14,13 +14,16 @@ public class DatabaseContract {
 
     private static final Uri AUTHORITY_URI = new Uri.Builder().scheme("content").authority(AUTHORITY).build();
 
-    /** Constants for Notebooks table contract. */
-    public interface Exercise extends BaseColumns {
+    /** Constants for Exercise table contract. */
+    public interface Exercise {
         /* Name of table */
         String ENTITY_NAME = "exercise";
+
         /** Content URI for this table. */
         Uri CONTENT_URI = Uri.withAppendedPath(AUTHORITY_URI, ENTITY_NAME);
+
         /** Content column names */
+        String _ID = BaseColumns._ID;
         String NAME = "name";
         String WEIGHT = "weight";
     }

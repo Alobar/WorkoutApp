@@ -1,4 +1,4 @@
-package alobar.workout.provider;
+package alobar.workout.database;
 
 import android.content.ContentProvider;
 import android.content.ContentResolver;
@@ -7,11 +7,10 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-
-import java.sql.SQLClientInfoException;
+import android.support.annotation.NonNull;
 
 /**
- * Created by rob on 20/07/15.
+ * Content provider for the database
  */
 public class DatabaseProvider extends ContentProvider {
 
@@ -26,7 +25,6 @@ public class DatabaseProvider extends ContentProvider {
     }
 
     private DatabaseHelper mOpenHelper;
-    private SQLiteDatabase db;
 
     @Override
     public boolean onCreate() {
@@ -35,7 +33,7 @@ public class DatabaseProvider extends ContentProvider {
     }
 
     @Override
-    public String getType(Uri uri) {
+    public String getType(@NonNull Uri uri) {
         switch (uriMatcher.match(uri)) {
             case ROUTE_EXERCISE_DIR:
                 return TYPE_EXERCISE_DIR;
@@ -45,7 +43,7 @@ public class DatabaseProvider extends ContentProvider {
     }
 
     @Override
-    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+    public Cursor query(@NonNull Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         Cursor result;
         switch (uriMatcher.match(uri)) {
             case ROUTE_EXERCISE_DIR:
@@ -59,7 +57,7 @@ public class DatabaseProvider extends ContentProvider {
     }
 
     @Override
-    public Uri insert(Uri uri, ContentValues values) {
+    public Uri insert(@NonNull Uri uri, ContentValues values) {
         Uri result;
         switch (uriMatcher.match(uri)) {
             case ROUTE_EXERCISE_DIR:
@@ -73,7 +71,7 @@ public class DatabaseProvider extends ContentProvider {
     }
 
     @Override
-    public int delete(Uri uri, String selection, String[] selectionArgs) {
+    public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
         int affected;
         switch (uriMatcher.match(uri)) {
             case ROUTE_EXERCISE_DIR:
@@ -88,7 +86,7 @@ public class DatabaseProvider extends ContentProvider {
     }
 
     @Override
-    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+    public int update(@NonNull Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         switch (uriMatcher.match(uri)) {
             case ROUTE_EXERCISE_DIR:
                 return 0;

@@ -1,12 +1,11 @@
-package alobar.workout.provider;
+package alobar.workout.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.provider.ContactsContract;
 
 /**
- * Created by rob on 20/07/15.
+ * SQLite Database helper
  */
 public class DatabaseHelper extends SQLiteOpenHelper {
 

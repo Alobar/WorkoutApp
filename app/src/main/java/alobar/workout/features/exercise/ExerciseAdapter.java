@@ -1,17 +1,16 @@
-package alobar.workout.adapters;
+package alobar.workout.features.exercise;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SimpleCursorAdapter;
-import android.widget.Toast;
 
 import alobar.workout.R;
-import alobar.workout.provider.DatabaseContract;
+import alobar.workout.database.DatabaseContract;
 
 /**
- * Created by rob on 21/07/15.
+ * View Adapter for Exercises
  */
 public class ExerciseAdapter extends SimpleCursorAdapter {
     private static String[] FROM = new String[]{DatabaseContract.Exercise.NAME, DatabaseContract.Exercise.WEIGHT};
