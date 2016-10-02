@@ -3,7 +3,7 @@ package alobar.workout.features.exercise;
 import alobar.util.MessageBuilder;
 
 /**
- * Presenter for {@link ExerciseDialog}
+ * Presenter for {@link ExerciseActivity}
  */
 public class ExercisePresenter {
 

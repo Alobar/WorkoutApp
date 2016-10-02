@@ -1,14 +1,14 @@
 package alobar.workout.features.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import alobar.workout.R;
-import alobar.workout.features.exercise.ExerciseDialog;
+import alobar.workout.features.exercise.ExerciseActivity;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         int itemId = item.getItemId();
         switch (itemId) {
             case R.id.addExerciseItem:
-                new ExerciseDialog().show(getSupportFragmentManager(), ExerciseDialog.class.getName());
+                startActivity(new Intent(this, ExerciseActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -1,18 +1,11 @@
 package alobar.workout.features.exercise;
 
-
-import android.app.Dialog;
-import android.app.Fragment;
 import android.content.ContentValues;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -21,12 +14,8 @@ import alobar.workout.R;
 import alobar.workout.database.DatabaseContract;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class ExerciseDialog extends DialogFragment implements ExercisePresenter.View, View.OnClickListener {
+public class ExerciseActivity extends AppCompatActivity implements ExercisePresenter.View, View.OnClickListener {
 
     @BindView(R.id.nameInput)
     TextInputLayout nameInput;
@@ -37,33 +26,15 @@ public class ExerciseDialog extends DialogFragment implements ExercisePresenter.
     @BindView(R.id.weightEdit)
     EditText weightEdit;
 
-    private Unbinder unbinder;
-
     private ExercisePresenter presenter;
 
-    public ExerciseDialog() {
-        // Required empty public constructor
-    }
-
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_exercise);
+        ButterKnife.bind(this);
+
         presenter = new ExercisePresenter(this);
-    }
-
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Dialog result = super.onCreateDialog(savedInstanceState);
-        result.setTitle(R.string.exercise_dialog_title);
-        return result;
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View result = inflater.inflate(R.layout.fragment_exercise_dialog, container, false);
-
-        unbinder = ButterKnife.bind(this, result);
 
         nameEdit.addTextChangedListener(new DebouncingTextWatcher() {
             @Override
@@ -78,17 +49,10 @@ public class ExerciseDialog extends DialogFragment implements ExercisePresenter.
             }
         });
 
-        result.findViewById(R.id.saveButton).setOnClickListener(this);
-        result.findViewById(R.id.cancelButton).setOnClickListener(this);
-
-        return result;
+        findViewById(R.id.saveButton).setOnClickListener(this);
+        findViewById(R.id.cancelButton).setOnClickListener(this);
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
-    }
 
     @Override
     public void onClick(View v) {
@@ -99,18 +63,11 @@ public class ExerciseDialog extends DialogFragment implements ExercisePresenter.
                 presenter.onSave(name, weight);
                 break;
             case R.id.cancelButton:
-                getDialog().cancel();
+                finish();
                 break;
             default:
                 throw new UnsupportedOperationException();
         }
-    }
-
-    public void saveToDatabase(String name, double weight) {
-        ContentValues values = new ContentValues();
-        values.put(DatabaseContract.Exercise.NAME, name);
-        values.put(DatabaseContract.Exercise.WEIGHT, weight);
-        getActivity().getContentResolver().insert(DatabaseContract.Exercise.CONTENT_URI, values);
     }
 
     @Override
@@ -137,11 +94,19 @@ public class ExerciseDialog extends DialogFragment implements ExercisePresenter.
 
     @Override
     public void toastError(String message) {
-        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void saveToDatabase(String name, double weight) {
+        ContentValues values = new ContentValues();
+        values.put(DatabaseContract.Exercise.NAME, name);
+        values.put(DatabaseContract.Exercise.WEIGHT, weight);
+        getContentResolver().insert(DatabaseContract.Exercise.CONTENT_URI, values);
     }
 
     @Override
     public void close() {
-        getDialog().dismiss();
+        finish();
     }
 }
