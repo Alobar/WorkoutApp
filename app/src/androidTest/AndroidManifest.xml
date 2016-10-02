@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest
+    package="alobar.notes"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Force androidTest to import libs which have a minSdkVersion that is higher than the app's -->
+    <uses-sdk tools:overrideLibrary="android.support.test.uiautomator.v18"/>
+
+</manifest>
