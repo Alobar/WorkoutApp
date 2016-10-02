@@ -3,11 +3,14 @@ package alobar.workout.database;
 import android.content.ContentProvider;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+
+import alobar.util.Assert;
 
 /**
  * Content provider for the database
@@ -24,11 +27,14 @@ public class DatabaseProvider extends ContentProvider {
         uriMatcher.addURI(DatabaseContract.AUTHORITY, DatabaseContract.Exercise.ENTITY_NAME, ROUTE_EXERCISE_DIR);
     }
 
-    private DatabaseHelper mOpenHelper;
+    private DatabaseHelper helper;
+    private ContentResolver resolver;
 
     @Override
     public boolean onCreate() {
-        mOpenHelper = new DatabaseHelper(getContext());
+        Context application = Assert.assigned(getContext()).getApplicationContext();
+        helper = new DatabaseHelper(application);
+        resolver = application.getContentResolver();
         return true;
     }
 
@@ -47,12 +53,12 @@ public class DatabaseProvider extends ContentProvider {
         Cursor result;
         switch (uriMatcher.match(uri)) {
             case ROUTE_EXERCISE_DIR:
-                result = Exercise.query(mOpenHelper.getReadableDatabase(), projection, selection, selectionArgs, sortOrder);
+                result = Exercise.query(helper.getReadableDatabase(), projection, selection, selectionArgs, sortOrder);
                 break;
             default:
                 throw new UnsupportedOperationException();
         }
-        result.setNotificationUri(getContext().getContentResolver(), uri);
+        result.setNotificationUri(resolver, uri);
         return result;
     }
 
@@ -61,12 +67,12 @@ public class DatabaseProvider extends ContentProvider {
         Uri result;
         switch (uriMatcher.match(uri)) {
             case ROUTE_EXERCISE_DIR:
-                result = Exercise.insert(mOpenHelper.getWritableDatabase(), values);
+                result = Exercise.insert(helper.getWritableDatabase(), values);
                 break;
             default:
                 throw new UnsupportedOperationException();
         }
-        getContext().getContentResolver().notifyChange(result, null);
+        resolver.notifyChange(result, null);
         return result;
     }
 
@@ -75,13 +81,13 @@ public class DatabaseProvider extends ContentProvider {
         int affected;
         switch (uriMatcher.match(uri)) {
             case ROUTE_EXERCISE_DIR:
-                affected = Exercise.delete(mOpenHelper.getWritableDatabase(), selection, selectionArgs);
+                affected = Exercise.delete(helper.getWritableDatabase(), selection, selectionArgs);
                 break;
             default:
                 throw new UnsupportedOperationException();
         }
         if (affected > 0)
-            getContext().getContentResolver().notifyChange(uri, null);
+            resolver.notifyChange(uri, null);
         return affected;
     }
 
@@ -102,7 +108,8 @@ public class DatabaseProvider extends ContentProvider {
 
         public static Uri insert(SQLiteDatabase db, ContentValues values) {
             long id = db.insert(DatabaseContract.Exercise.ENTITY_NAME, null, values);
-            return id != -1 ? Uri.withAppendedPath(DatabaseContract.Exercise.CONTENT_URI, Long.toString(id)) : null;
+            Assert.check(id >= 0, "Exercise insert failed");
+            return Uri.withAppendedPath(DatabaseContract.Exercise.CONTENT_URI, Long.toString(id));
         }
 
         public static int delete(SQLiteDatabase db, String whereClause, String[] whereArgs) {
