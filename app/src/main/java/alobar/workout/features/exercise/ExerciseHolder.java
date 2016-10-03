@@ -3,24 +3,24 @@ package alobar.workout.features.exercise;
 import android.content.Context;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import alobar.workout.R;
 import alobar.workout.database.DatabaseContract;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * View Holder for Exercises
  */
-public class ExerciseHolder implements OnClickListener, PopupMenu.OnMenuItemClickListener {
+public class ExerciseHolder implements PopupMenu.OnMenuItemClickListener {
 
     private Context context;
     private long _id;
 
     public ExerciseHolder(View view, Context context) {
-        View menuButton = view.findViewById(R.id.menuButton);
-        menuButton.setOnClickListener(this);
+        ButterKnife.bind(this, view);
         this.context = context;
     }
 
@@ -28,18 +28,12 @@ public class ExerciseHolder implements OnClickListener, PopupMenu.OnMenuItemClic
         this._id = _id;
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.menuButton:
-                PopupMenu menu = new PopupMenu(context, v);
-                menu.inflate(R.menu.item_exercise);
-                menu.setOnMenuItemClickListener(this);
-                menu.show();
-                break;
-            default:
-                throw new UnsupportedOperationException();
-        }
+    @OnClick(R.id.menuButton)
+    void onMenuButtonClick(View v) {
+        PopupMenu menu = new PopupMenu(context, v);
+        menu.inflate(R.menu.item_exercise);
+        menu.setOnMenuItemClickListener(this);
+        menu.show();
     }
 
     @Override
@@ -47,7 +41,7 @@ public class ExerciseHolder implements OnClickListener, PopupMenu.OnMenuItemClic
         switch (item.getItemId()) {
             case R.id.removeExerciseItem:
                 String where = DatabaseContract.Exercise._ID + " = ?";
-                String[] whereArgs = new String[] { Long.toString(_id) };
+                String[] whereArgs = new String[]{Long.toString(_id)};
                 context.getContentResolver().delete(DatabaseContract.Exercise.CONTENT_URI, where, whereArgs);
                 return true;
             case R.id.editExerciseItem:

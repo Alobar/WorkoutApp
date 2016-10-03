@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -14,8 +13,9 @@ import alobar.workout.R;
 import alobar.workout.database.DatabaseContract;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-public class ExerciseActivity extends AppCompatActivity implements ExercisePresenter.View, View.OnClickListener {
+public class ExerciseActivity extends AppCompatActivity implements ExercisePresenter.View {
 
     @BindView(R.id.nameInput)
     TextInputLayout nameInput;
@@ -48,26 +48,18 @@ public class ExerciseActivity extends AppCompatActivity implements ExercisePrese
                 presenter.onWeightChanged(s.toString());
             }
         });
-
-        findViewById(R.id.saveButton).setOnClickListener(this);
-        findViewById(R.id.cancelButton).setOnClickListener(this);
     }
 
+    @OnClick(R.id.saveButton)
+    void onSaveButtonClick() {
+        String name = nameEdit.getText().toString().trim();
+        String weight = weightEdit.getText().toString().trim();
+        presenter.onSave(name, weight);
+    }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.saveButton:
-                String name = nameEdit.getText().toString().trim();
-                String weight = weightEdit.getText().toString().trim();
-                presenter.onSave(name, weight);
-                break;
-            case R.id.cancelButton:
-                finish();
-                break;
-            default:
-                throw new UnsupportedOperationException();
-        }
+    @OnClick(R.id.cancelButton)
+    void onCancelButtonClick() {
+        finish();
     }
 
     @Override
