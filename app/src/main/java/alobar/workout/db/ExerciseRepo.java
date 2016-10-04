@@ -30,7 +30,9 @@ public class ExerciseRepo {
     }
 
     public Exercise findById(long id) {
-        Cursor cursor = db.rawQuery("select * from " + DatabaseContract.Exercise.tableName + " where _id = ?", new String[]{Long.toString(id)});
+        final String query = "select * from " + DatabaseContract.Exercise.tableName +
+                " where " + DatabaseContract.Exercise._ID + " = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{Long.toString(id)});
         try {
             if (cursor.moveToNext())
                 return new Exercise(
