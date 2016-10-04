@@ -45,7 +45,7 @@ public class ExerciseHolder implements PopupMenu.OnMenuItemClickListener {
                 context.getContentResolver().delete(DatabaseContract.Exercise.CONTENT_URI, where, whereArgs);
                 return true;
             case R.id.editExerciseItem:
-                Toast.makeText(context, "TODO: Edit exercise", Toast.LENGTH_SHORT).show();
+                context.startActivity(ExerciseActivity.newIntent(context, _id));
                 return true;
             default:
                 return false;

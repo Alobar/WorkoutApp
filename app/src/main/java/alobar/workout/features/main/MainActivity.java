@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         int itemId = item.getItemId();
         switch (itemId) {
             case R.id.addExerciseItem:
-                startActivity(new Intent(this, ExerciseActivity.class));
+                startActivity(ExerciseActivity.newIntent(this));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -1,6 +1,8 @@
 package alobar.workout.features.exercise;
 
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +19,9 @@ import butterknife.OnClick;
 
 public class ExerciseActivity extends AppCompatActivity implements ExercisePresenter.View {
 
+    private static final String ARG_EXERCISE_ID = "exerciseId";
+    private static final long INVALID_EXERCISE_ID = -1;
+
     @BindView(R.id.nameInput)
     TextInputLayout nameInput;
     @BindView(R.id.nameEdit)
@@ -26,6 +31,18 @@ public class ExerciseActivity extends AppCompatActivity implements ExercisePrese
     @BindView(R.id.weightEdit)
     EditText weightEdit;
 
+    long exerciseId;
+
+    public static Intent newIntent(Context context) {
+        return newIntent(context, INVALID_EXERCISE_ID);
+    }
+
+    public static Intent newIntent(Context context, long exerciseId) {
+        Intent result = new Intent(context, ExerciseActivity.class);
+        result.putExtra(ARG_EXERCISE_ID, exerciseId);
+        return result;
+    }
+
     private ExercisePresenter presenter;
 
     @Override
@@ -33,6 +50,8 @@ public class ExerciseActivity extends AppCompatActivity implements ExercisePrese
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exercise);
         ButterKnife.bind(this);
+
+        exerciseId = getIntent().getLongExtra(ARG_EXERCISE_ID, INVALID_EXERCISE_ID);
 
         presenter = new ExercisePresenter(this);
 
