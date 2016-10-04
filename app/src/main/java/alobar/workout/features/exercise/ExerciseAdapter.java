@@ -1,40 +1,58 @@
 package alobar.workout.features.exercise;
 
 import android.content.Context;
-import android.database.Cursor;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SimpleCursorAdapter;
+import android.widget.BaseAdapter;
+
+import java.util.List;
 
 import alobar.workout.R;
-import alobar.workout.db.DatabaseContract;
+import alobar.workout.data.Exercise;
 
 /**
  * View Adapter for Exercises
  */
-public class ExerciseAdapter extends SimpleCursorAdapter {
-    private static String[] FROM = new String[]{DatabaseContract.Exercise.NAME, DatabaseContract.Exercise.WEIGHT};
-    private static int[] TO = new int[]{R.id.nameEdit, R.id.weightEdit};
+public class ExerciseAdapter extends BaseAdapter {
+
+    private final Context context;
+    private final LayoutInflater inflater;
+    private List<Exercise> items;
 
     public ExerciseAdapter(Context context) {
-        super(context, R.layout.item_exercise, null, FROM, TO, 0);
+        super();
+        this.context = context;
+        this.inflater = LayoutInflater.from(context);
     }
 
     @Override
-    public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        View result = super.newView(context, cursor, parent);
-        result.setTag(new ExerciseHolder(result, context));
-        return result;
+    public int getCount() {
+        return items != null ? items.size() : 0;
     }
 
     @Override
-    public void bindView(View view, Context context, Cursor cursor) {
-        super.bindView(view, context, cursor);
-        Long _id = cursor.getLong(cursor.getColumnIndexOrThrow(DatabaseContract.Exercise._ID));
-        holderFrom(view).bind(_id);
+    public Exercise getItem(int i) {
+        return items != null ? items.get(i) : null;
     }
 
-    private ExerciseHolder holderFrom(View view) {
-        return (ExerciseHolder) view.getTag();
+    @Override
+    public long getItemId(int i) {
+        return items != null ? items.get(i)._id : 0;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        if (convertView == null) {
+            convertView = inflater.inflate(R.layout.item_exercise, parent, false);
+            convertView.setTag(new ExerciseHolder(convertView, context));
+        }
+        ((ExerciseHolder) convertView.getTag()).bind(getItem(position));
+        return convertView;
+    }
+
+    public void changeItems(List<Exercise> items) {
+        this.items = items;
+        notifyDataSetChanged();
     }
 }

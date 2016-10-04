@@ -12,7 +12,7 @@
     tools:ignore="RtlHardcoded,RtlSymmetry">
 
     <TextView
-        android:id="@+id/nameEdit"
+        android:id="@+id/nameText"
         style="@style/TextAppearance.AppCompat.Large"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -20,7 +20,7 @@
         tools:text="[name]"/>
 
     <TextView
-        android:id="@+id/weightEdit"
+        android:id="@+id/weightText"
         style="@style/TextAppearance.AppCompat.Large"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -17,10 +17,10 @@ public class DatabaseContract {
     /** Constants for Exercise table contract. */
     public interface Exercise {
         /* Name of table */
-        String ENTITY_NAME = "exercise";
+        String tableName = "exercise";
 
         /** Content URI for this table. */
-        Uri CONTENT_URI = Uri.withAppendedPath(AUTHORITY_URI, ENTITY_NAME);
+        Uri CONTENT_URI = Uri.withAppendedPath(AUTHORITY_URI, tableName);
 
         /** Content column names */
         String _ID = BaseColumns._ID;

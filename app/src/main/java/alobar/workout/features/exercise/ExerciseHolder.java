@@ -4,9 +4,14 @@ import android.content.Context;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
+import android.widget.TextView;
+
+import java.util.Locale;
 
 import alobar.workout.R;
+import alobar.workout.data.Exercise;
 import alobar.workout.db.DatabaseContract;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -14,6 +19,11 @@ import butterknife.OnClick;
  * View Holder for Exercises
  */
 public class ExerciseHolder implements PopupMenu.OnMenuItemClickListener {
+
+    @BindView(R.id.nameText)
+    TextView nameText;
+    @BindView(R.id.weightText)
+    TextView weightText;
 
     private Context context;
     private long _id;
@@ -23,8 +33,10 @@ public class ExerciseHolder implements PopupMenu.OnMenuItemClickListener {
         this.context = context;
     }
 
-    public void bind(long _id) {
-        this._id = _id;
+    public void bind(Exercise exercise) {
+        this._id = exercise._id;
+        nameText.setText(exercise.name);
+        weightText.setText(String.format("%s", exercise.weight));
     }
 
     @OnClick(R.id.menuButton)
