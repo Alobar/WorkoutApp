@@ -10,6 +10,6 @@
     <string name="exercise_dialog_title">Exercise</string>
     <string name="menu_item_exercise_remove">Remove</string>
     <string name="menu_item_exercise_edit">Edit</string>
-    <string name="fragment_exercises_empty_text">Loading data or empty...</string>
+    <string name="fragment_exercises_empty_text">Loading…</string>
 
 </resources>
