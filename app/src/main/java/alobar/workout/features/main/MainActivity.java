@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.exerciseList)
     ListView exerciseList;
 
-    private ExerciseAdapter adapter2;
+    private ExerciseAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,11 +38,11 @@ public class MainActivity extends AppCompatActivity {
         toolbar.showOverflowMenu();
         setSupportActionBar(toolbar);
 
-        adapter2 = new ExerciseAdapter(this);
-        exerciseList.setAdapter(adapter2);
+        adapter = new ExerciseAdapter(this);
+        exerciseList.setAdapter(adapter);
         exerciseList.setEmptyView(ButterKnife.findById(this, R.id.emptyView));
 
-        getSupportLoaderManager().initLoader(LOADER_EXERCISES, null, exercisesLoader2);
+        getSupportLoaderManager().initLoader(LOADER_EXERCISES, null, exercisesLoader);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private LoaderManager.LoaderCallbacks<List<Exercise>> exercisesLoader2 = new LoaderManager.LoaderCallbacks<List<Exercise>>() {
+    private LoaderManager.LoaderCallbacks<List<Exercise>> exercisesLoader = new LoaderManager.LoaderCallbacks<List<Exercise>>() {
         @Override
         public android.support.v4.content.Loader<List<Exercise>> onCreateLoader(int id, Bundle args) {
             return new ExercisesLoader(getApplicationContext());
@@ -71,12 +71,12 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onLoadFinished(android.support.v4.content.Loader<List<Exercise>> loader, List<Exercise> data) {
-            adapter2.changeItems(data);
+            adapter.changeItems(data);
         }
 
         @Override
         public void onLoaderReset(android.support.v4.content.Loader<List<Exercise>> loader) {
-            adapter2.changeItems(null);
+            adapter.changeItems(null);
         }
     };
 }
