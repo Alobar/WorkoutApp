@@ -15,6 +15,7 @@ import alobar.workout.db.ExerciseRepo;
 public class ExercisesLoader extends AsyncTaskLoader<List<Exercise>> {
 
     private final DatabaseHelper helper;
+    private List<Exercise> data;
 
     public ExercisesLoader(Context context) {
         super(context);
@@ -23,12 +24,21 @@ public class ExercisesLoader extends AsyncTaskLoader<List<Exercise>> {
 
     @Override
     protected void onStartLoading() {
-        forceLoad();
+        if (data != null)
+            deliverResult(data);
+        else
+            forceLoad();
     }
 
     @Override
     public List<Exercise> loadInBackground() {
         return new ExerciseRepo(helper.getWritableDatabase()).all();
+    }
+
+    @Override
+    public void deliverResult(List<Exercise> data) {
+        this.data = data;
+        super.deliverResult(data);
     }
 
     @Override
