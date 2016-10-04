@@ -21,7 +21,7 @@ public class ExerciseRepo {
     }
 
     public List<Exercise> all() {
-        Cursor cursor = db.rawQuery("select name, weight from " + DatabaseContract.Exercise.ENTITY_NAME, null);
+        Cursor cursor = db.rawQuery("select * from " + DatabaseContract.Exercise.tableName, null);
         try {
             return from(cursor);
         } finally {
@@ -30,10 +30,11 @@ public class ExerciseRepo {
     }
 
     public Exercise findById(long id) {
-        Cursor cursor = db.rawQuery("select name, weight from " + DatabaseContract.Exercise.ENTITY_NAME + " where _id = ?", new String[]{Long.toString(id)});
+        Cursor cursor = db.rawQuery("select * from " + DatabaseContract.Exercise.tableName + " where _id = ?", new String[]{Long.toString(id)});
         try {
             if (cursor.moveToNext())
                 return new Exercise(
+                        cursor.getLong(cursor.getColumnIndexOrThrow(DatabaseContract.Exercise._ID)),
                         cursor.getString(cursor.getColumnIndexOrThrow(DatabaseContract.Exercise.NAME)),
                         cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseContract.Exercise.WEIGHT))
                 );
@@ -44,11 +45,13 @@ public class ExerciseRepo {
     }
 
     public static List<Exercise> from(Cursor cursor) {
+        final int idIndex = cursor.getColumnIndexOrThrow(DatabaseContract.Exercise._ID);
         final int nameIndex = cursor.getColumnIndexOrThrow(DatabaseContract.Exercise.NAME);
         final int weightIndex = cursor.getColumnIndexOrThrow(DatabaseContract.Exercise.WEIGHT);
         List<Exercise> result = new ArrayList<>(cursor.getCount());
         while (cursor.moveToNext()) {
             result.add(new Exercise(
+                    cursor.getLong(idIndex),
                     cursor.getString(nameIndex),
                     cursor.getDouble(weightIndex)
             ));
