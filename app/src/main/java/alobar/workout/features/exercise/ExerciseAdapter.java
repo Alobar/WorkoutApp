@@ -17,12 +17,14 @@ import alobar.workout.data.Exercise;
 public class ExerciseAdapter extends BaseAdapter {
 
     private final Context context;
+    private final ExerciseHolder.OnExerciseActions listener;
     private final LayoutInflater inflater;
     private List<Exercise> items;
 
-    public ExerciseAdapter(Context context) {
+    public ExerciseAdapter(Context context, ExerciseHolder.OnExerciseActions listener) {
         super();
         this.context = context;
+        this.listener = listener;
         this.inflater = LayoutInflater.from(context);
     }
 
@@ -45,7 +47,7 @@ public class ExerciseAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.item_exercise, parent, false);
-            convertView.setTag(new ExerciseHolder(convertView, context));
+            convertView.setTag(new ExerciseHolder(listener, convertView, context));
         }
         ((ExerciseHolder) convertView.getTag()).bind(getItem(position));
         return convertView;

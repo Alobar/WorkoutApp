@@ -12,13 +12,16 @@ import java.util.List;
 
 import alobar.workout.R;
 import alobar.workout.data.Exercise;
+import alobar.workout.db.DatabaseHelper;
+import alobar.workout.db.ExerciseRepo;
 import alobar.workout.features.exercise.ExerciseActivity;
 import alobar.workout.features.exercise.ExerciseAdapter;
+import alobar.workout.features.exercise.ExerciseHolder;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ExerciseHolder.OnExerciseActions {
 
     private static final int LOADER_EXERCISES = 1;
 
@@ -38,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         toolbar.showOverflowMenu();
         setSupportActionBar(toolbar);
 
-        adapter = new ExerciseAdapter(this);
+        adapter = new ExerciseAdapter(this, this);
         exerciseList.setAdapter(adapter);
         exerciseList.setEmptyView(ButterKnife.findById(this, R.id.emptyView));
 
@@ -79,4 +82,21 @@ public class MainActivity extends AppCompatActivity {
             adapter.changeItems(null);
         }
     };
+
+    @Override
+    public void onEditExercise(long _id) {
+        startActivity(ExerciseActivity.newIntent(this, _id));
+    }
+
+    @Override
+    public void onDeleteExercise(final long _id) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                DatabaseHelper helper = new DatabaseHelper(getApplicationContext());
+                ExerciseRepo repo = new ExerciseRepo(helper.getWritableDatabase());
+                repo.deleteById(_id);
+            }
+        }).start();
+    }
 }

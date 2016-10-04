@@ -4,11 +4,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import alobar.workout.db.ExerciseRepo;
+
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -23,16 +22,18 @@ public class ExercisePresenterTests {
 
     @Test
     public void NameChangeShouldValidate() {
+        ExercisePresenter presenter = new ExercisePresenter(mock(ExerciseRepo.class));
         ExercisePresenter.View view = mock(ExercisePresenter.View.class);
-        ExercisePresenter presenter = new ExercisePresenter(view);
+        presenter.onStart(view);
         presenter.onNameChanged("foo");
-        verify(view, times(1)).setNameHint(null);
+        verify(view).setNameHint(null);
     }
 
     @Test
     public void WeightChangeShouldValidate() {
+        ExercisePresenter presenter = new ExercisePresenter(mock(ExerciseRepo.class));
         ExercisePresenter.View view = mock(ExercisePresenter.View.class);
-        ExercisePresenter presenter = new ExercisePresenter(view);
+        presenter.onStart(view);
         presenter.onWeightChanged("1.0");
         verify(view).setWeightHint(null);
     }
@@ -52,16 +53,6 @@ public class ExercisePresenterTests {
         assertEquals(ExercisePresenter.validateWeight(" "), WeightRequired);
         assertEquals(ExercisePresenter.validateWeight("foo"), WeightMustBeNumeric);
         assertEquals(ExercisePresenter.validateWeight("1.0"), null);
-    }
-
-    @Test
-    public void isNumber() {
-        assertFalse(ExercisePresenter.isNumber(null));
-        assertFalse(ExercisePresenter.isNumber(""));
-        assertFalse(ExercisePresenter.isNumber(" "));
-        assertFalse(ExercisePresenter.isNumber("foo"));
-        assertTrue(ExercisePresenter.isNumber("1"));
-        assertTrue(ExercisePresenter.isNumber("1.0"));
     }
 
     @Test

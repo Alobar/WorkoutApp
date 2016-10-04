@@ -1,6 +1,5 @@
 package alobar.workout.features.exercise;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,7 +11,6 @@ import android.widget.Toast;
 
 import alobar.android.text.DebouncingTextWatcher;
 import alobar.workout.R;
-import alobar.workout.db.DatabaseContract;
 import alobar.workout.db.DatabaseHelper;
 import alobar.workout.db.ExerciseRepo;
 import butterknife.BindView;
@@ -59,7 +57,8 @@ public class ExerciseActivity extends AppCompatActivity implements ExercisePrese
 
         helper = new DatabaseHelper(this);
         ExerciseRepo repo = new ExerciseRepo(helper.getWritableDatabase());
-        presenter = new ExercisePresenter(this, repo);
+        presenter = new ExercisePresenter(repo);
+
 
         nameEdit.addTextChangedListener(new DebouncingTextWatcher() {
             @Override
@@ -84,7 +83,14 @@ public class ExerciseActivity extends AppCompatActivity implements ExercisePrese
     @Override
     protected void onStart() {
         super.onStart();
+        presenter.onStart(this);
         presenter.setExerciseId(exerciseId);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        presenter.onStop();
     }
 
     @OnClick(R.id.saveButton)
@@ -124,14 +130,6 @@ public class ExerciseActivity extends AppCompatActivity implements ExercisePrese
     @Override
     public void toastError(String message) {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void saveToDatabase(String name, double weight) {
-        ContentValues values = new ContentValues();
-        values.put(DatabaseContract.Exercise.NAME, name);
-        values.put(DatabaseContract.Exercise.WEIGHT, weight);
-        getContentResolver().insert(DatabaseContract.Exercise.CONTENT_URI, values);
     }
 
     @Override

@@ -6,11 +6,8 @@ import android.view.View;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
-import java.util.Locale;
-
 import alobar.workout.R;
 import alobar.workout.data.Exercise;
-import alobar.workout.db.DatabaseContract;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -20,6 +17,8 @@ import butterknife.OnClick;
  */
 public class ExerciseHolder implements PopupMenu.OnMenuItemClickListener {
 
+    private final OnExerciseActions listener;
+
     @BindView(R.id.nameText)
     TextView nameText;
     @BindView(R.id.weightText)
@@ -28,7 +27,8 @@ public class ExerciseHolder implements PopupMenu.OnMenuItemClickListener {
     private Context context;
     private long _id;
 
-    public ExerciseHolder(View view, Context context) {
+    public ExerciseHolder(OnExerciseActions listener, View view, Context context) {
+        this.listener = listener;
         ButterKnife.bind(this, view);
         this.context = context;
     }
@@ -51,15 +51,18 @@ public class ExerciseHolder implements PopupMenu.OnMenuItemClickListener {
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.removeExerciseItem:
-                String where = DatabaseContract.Exercise._ID + " = ?";
-                String[] whereArgs = new String[]{Long.toString(_id)};
-                context.getContentResolver().delete(DatabaseContract.Exercise.CONTENT_URI, where, whereArgs);
+                listener.onDeleteExercise(_id);
                 return true;
             case R.id.editExerciseItem:
-                context.startActivity(ExerciseActivity.newIntent(context, _id));
+                listener.onEditExercise(_id);
                 return true;
             default:
                 return false;
         }
+    }
+
+    public interface OnExerciseActions {
+        void onEditExercise(long _id);
+        void onDeleteExercise(long _id);
     }
 }
