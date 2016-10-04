@@ -1,16 +1,28 @@
 package alobar.workout.features.exercise;
 
 import alobar.util.MessageBuilder;
+import alobar.workout.data.Exercise;
+import alobar.workout.db.ExerciseRepo;
 
 /**
  * Presenter for {@link ExerciseActivity}
  */
 public class ExercisePresenter {
 
-    private View view;
+    private final View view;
+    private final ExerciseRepo exercises;
 
-    public ExercisePresenter(View view) {
+    public ExercisePresenter(View view, ExerciseRepo exercises) {
         this.view = view;
+        this.exercises = exercises;
+    }
+
+    public void setExerciseId(long id) {
+        Exercise exercise = exercises.findById(id);
+        if (exercise != null) {
+            view.setName(exercise.name);
+            view.setWeight(Double.toString(exercise.weight));
+        }
     }
 
     public void onNameChanged(String value) {

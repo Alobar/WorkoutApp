@@ -1,4 +1,4 @@
-package alobar.workout.database;
+package alobar.workout.db;
 
 import android.net.Uri;
 import android.provider.BaseColumns;

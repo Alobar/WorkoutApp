@@ -4,10 +4,9 @@ import android.content.Context;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
-import android.widget.Toast;
 
 import alobar.workout.R;
-import alobar.workout.database.DatabaseContract;
+import alobar.workout.db.DatabaseContract;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 

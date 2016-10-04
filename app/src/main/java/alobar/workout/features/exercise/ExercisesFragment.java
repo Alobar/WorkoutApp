@@ -11,8 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import alobar.workout.R;
-import alobar.workout.features.exercise.ExerciseAdapter;
-import alobar.workout.database.DatabaseContract;
+import alobar.workout.db.DatabaseContract;
 
 public class ExercisesFragment extends ListFragment {
 

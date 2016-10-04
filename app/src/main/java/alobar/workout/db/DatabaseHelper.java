@@ -1,4 +1,4 @@
-package alobar.workout.database;
+package alobar.workout.db;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -24,7 +24,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             DatabaseContract.Exercise.WEIGHT +
             ") VALUES ('Arm push', 45.5)";
 
-    DatabaseHelper(Context context) {
+    public DatabaseHelper(Context context) {
         super(context, DBNAME, null, 1);
     }
 

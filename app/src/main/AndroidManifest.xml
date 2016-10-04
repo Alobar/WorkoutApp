@@ -25,7 +25,7 @@
             android:name=".features.exercise.ExerciseActivity"/>
 
         <provider
-            android:name=".database.DatabaseProvider"
+            android:name=".db.DatabaseProvider"
             android:authorities="${applicationId}.WorkoutProvider"
             android:enabled="true"
             android:exported="false"/>

@@ -1,4 +1,4 @@
-package alobar.workout.database;
+package alobar.workout.db;
 
 import android.content.ContentProvider;
 import android.content.ContentResolver;

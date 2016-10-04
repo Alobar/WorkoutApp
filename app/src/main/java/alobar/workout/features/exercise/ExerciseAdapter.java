@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.SimpleCursorAdapter;
 
 import alobar.workout.R;
-import alobar.workout.database.DatabaseContract;
+import alobar.workout.db.DatabaseContract;
 
 /**
  * View Adapter for Exercises
