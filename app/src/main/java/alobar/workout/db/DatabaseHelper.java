@@ -22,7 +22,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             DatabaseContract.Exercise.tableName + " (" +
             DatabaseContract.Exercise.NAME + ", " +
             DatabaseContract.Exercise.WEIGHT +
-            ") VALUES ('Arm push', 45.5)";
+            ") VALUES ('Dumbbell chest press', 20.0), ('Barbell squat', 58.0), ('Dumbbell row', 20.0), ('Elevated lunge, dumbbells', 15.0), ('Dumbbell shoulder press', 14.0)";
 
     public DatabaseHelper(Context context) {
         super(context, DBNAME, null, 1);
