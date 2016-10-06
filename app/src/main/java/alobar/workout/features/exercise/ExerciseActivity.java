@@ -56,7 +56,7 @@ public class ExerciseActivity extends AppCompatActivity implements ExercisePrese
         exerciseId = getIntent().getLongExtra(ARG_EXERCISE_ID, INVALID_EXERCISE_ID);
 
         helper = new DatabaseHelper(this);
-        ExerciseRepo repo = new ExerciseRepo(helper.getWritableDatabase());
+        ExerciseRepo repo = new ExerciseRepo(helper.getWritableDatabase(), getContentResolver());
         presenter = new ExercisePresenter(repo);
 
 

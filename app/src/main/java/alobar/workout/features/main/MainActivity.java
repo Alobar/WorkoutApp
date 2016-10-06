@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements ExerciseHolder.On
             @Override
             public void run() {
                 DatabaseHelper helper = new DatabaseHelper(getApplicationContext());
-                ExerciseRepo repo = new ExerciseRepo(helper.getWritableDatabase());
+                ExerciseRepo repo = new ExerciseRepo(helper.getWritableDatabase(), getContentResolver());
                 repo.deleteById(_id);
             }
         }).start();

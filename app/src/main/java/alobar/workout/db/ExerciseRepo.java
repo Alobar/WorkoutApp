@@ -1,5 +1,6 @@
 package alobar.workout.db;
 
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -17,9 +18,11 @@ import alobar.workout.data.Exercise;
 public class ExerciseRepo {
 
     private final SQLiteDatabase db;
+    private final ContentResolver resolver;
 
-    public ExerciseRepo(SQLiteDatabase db) {
+    public ExerciseRepo(SQLiteDatabase db, ContentResolver resolver) {
         this.db = db;
+        this.resolver = resolver;
     }
 
     public List<Exercise> all() {
@@ -60,20 +63,25 @@ public class ExerciseRepo {
     }
 
     public void save(Exercise exercise) {
+        Assert.assigned(exercise);
         ContentValues values = new ContentValues();
         values.put(DatabaseContract.Exercise.NAME, exercise.name);
         values.put(DatabaseContract.Exercise.WEIGHT, exercise.weight);
+        long _id = exercise._id;
         if (exercise._id == 0) {
-            long _id = db.insert(DatabaseContract.Exercise.tableName, null, values);
+            _id = db.insert(DatabaseContract.Exercise.tableName, null, values);
             Assert.check(_id != 0, "Exercise insert failed");
         } else {
             int affected = db.update(DatabaseContract.Exercise.tableName, values, DatabaseContract.Exercise._ID + " = ?", new String[]{Long.toString(exercise._id)});
             Assert.check(affected == 1, "Exercise update failed");
         }
+        resolver.notifyChange(DatabaseContract.Exercise.uri(_id), null);
     }
 
     public void deleteById(long _id) {
+        Assert.check(_id != 0, "Cannot delete exercise by id zero");
         int affected = db.delete(DatabaseContract.Exercise.tableName, DatabaseContract.Exercise._ID + " = ?", new String[]{Long.toString(_id)});
-        Assert.check(affected == 0, "Exercise delete failed");
+        Assert.check(affected == 1, "Exercise delete failed");
+        resolver.notifyChange(DatabaseContract.Exercise.uri(_id), null);
     }
 }
