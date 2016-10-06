@@ -4,4 +4,4 @@ With *Alobar Workout* you can keep track of your gym workout. You can put your g
 
 ![Screenshot](assets/screenshots/main.png?raw=true "Main screenshot")
 
-This app is intentionally kept very simple so it can be used as a portfolio app and demonstrate my coding style.
+This is a native Android app and it is intentionally very simple so it can be used as a portfolio app and demonstrate my coding style.
