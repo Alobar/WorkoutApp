@@ -2,7 +2,8 @@ package alobar.workout.features.exercise;
 
 import java.util.concurrent.Callable;
 
-import alobar.util.Assert;
+import javax.inject.Inject;
+
 import alobar.util.MessageBuilder;
 import alobar.util.NullObject;
 import alobar.util.Numbers;
@@ -18,29 +19,30 @@ import rx.schedulers.Schedulers;
 /**
  * Presenter for {@link ExerciseActivity}
  */
-public class ExercisePresenter {
+class ExercisePresenter {
 
     private final ExerciseRepo exercises;
     private View view;
     private long exerciseId;
     private Subscription exerciseSubscription;
 
-    public ExercisePresenter(ExerciseRepo exercises) {
+    @Inject
+    ExercisePresenter(ExerciseRepo exercises) {
         this.exercises = exercises;
         this.view = NullObject.get(View.class);
     }
 
-    public void onStart(View view) {
+    void onStart(View view) {
         this.view = view;
     }
 
-    public void onStop() {
+    void onStop() {
         this.view = NullObject.get(View.class);
         if (exerciseSubscription != null && !exerciseSubscription.isUnsubscribed())
             exerciseSubscription.unsubscribe();
     }
 
-    public void setExerciseId(final long id) {
+    void setExerciseId(final long id) {
         exerciseSubscription = Observable
                 .fromCallable(new Callable<Exercise>() {
                     @Override
@@ -66,11 +68,11 @@ public class ExercisePresenter {
                 });
     }
 
-    public void onNameChanged(String value) {
+    void onNameChanged(String value) {
         view.setNameHint(validateName(value));
     }
 
-    public void onWeightChanged(String value) {
+    void onWeightChanged(String value) {
         view.setWeightHint(validateWeight(value));
     }
 
@@ -95,7 +97,7 @@ public class ExercisePresenter {
         return errors.length() > 0 ? errors.toString() : null;
     }
 
-    public void onSave(String name, String weight) {
+    void onSave(String name, String weight) {
         String error = validate(name, weight);
         if (error != null) {
             view.toastError(error);

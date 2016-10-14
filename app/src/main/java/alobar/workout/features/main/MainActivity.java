@@ -10,9 +10,11 @@ import android.widget.ListView;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import alobar.workout.R;
+import alobar.workout.app.App;
 import alobar.workout.data.Exercise;
-import alobar.workout.db.DatabaseHelper;
 import alobar.workout.db.ExerciseRepo;
 import alobar.workout.features.exercise.ExerciseActivity;
 import alobar.workout.features.exercise.ExerciseAdapter;
@@ -30,6 +32,9 @@ public class MainActivity extends AppCompatActivity implements ExerciseHolder.On
     @BindView(R.id.exerciseList)
     ListView exerciseList;
 
+    @Inject
+    ExerciseRepo repo;
+
     private ExerciseAdapter adapter;
 
     @Override
@@ -37,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements ExerciseHolder.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        App.from(this).getComponent().inject(this);
 
         toolbar.showOverflowMenu();
         setSupportActionBar(toolbar);
@@ -90,13 +96,21 @@ public class MainActivity extends AppCompatActivity implements ExerciseHolder.On
 
     @Override
     public void onDeleteExercise(final long _id) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                DatabaseHelper helper = new DatabaseHelper(getApplicationContext());
-                ExerciseRepo repo = new ExerciseRepo(helper.getWritableDatabase(), getContentResolver());
-                repo.deleteById(_id);
-            }
-        }).start();
+        new DeleteByIdThread(repo, _id).start();
+    }
+
+    private static class DeleteByIdThread extends Thread {
+        private final ExerciseRepo repo;
+        private final long _id;
+
+        DeleteByIdThread(ExerciseRepo repo, long _id) {
+            this.repo = repo;
+            this._id = _id;
+        }
+
+        @Override
+        public void run() {
+            repo.deleteById(_id);
+        }
     }
 }

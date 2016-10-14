@@ -9,8 +9,11 @@ import android.text.Editable;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import javax.inject.Inject;
+
 import alobar.android.text.DebouncingTextWatcher;
 import alobar.workout.R;
+import alobar.workout.app.App;
 import alobar.workout.db.DatabaseHelper;
 import alobar.workout.db.ExerciseRepo;
 import butterknife.BindView;
@@ -31,9 +34,10 @@ public class ExerciseActivity extends AppCompatActivity implements ExercisePrese
     @BindView(R.id.weightEdit)
     EditText weightEdit;
 
-    private DatabaseHelper helper;
+    @Inject
+    ExerciseRepo exerciseRepo;
 
-    long exerciseId;
+    private long exerciseId;
 
     public static Intent newIntent(Context context) {
         return newIntent(context, INVALID_EXERCISE_ID);
@@ -45,20 +49,17 @@ public class ExerciseActivity extends AppCompatActivity implements ExercisePrese
         return result;
     }
 
-    private ExercisePresenter presenter;
+    @Inject
+    ExercisePresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exercise);
         ButterKnife.bind(this);
+        App.from(this).getComponent().inject(this);
 
         exerciseId = getIntent().getLongExtra(ARG_EXERCISE_ID, INVALID_EXERCISE_ID);
-
-        helper = new DatabaseHelper(this);
-        ExerciseRepo repo = new ExerciseRepo(helper.getWritableDatabase(), getContentResolver());
-        presenter = new ExercisePresenter(repo);
-
 
         nameEdit.addTextChangedListener(new DebouncingTextWatcher() {
             @Override
@@ -72,12 +73,6 @@ public class ExerciseActivity extends AppCompatActivity implements ExercisePrese
                 presenter.onWeightChanged(s.toString());
             }
         });
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        helper.close();
     }
 
     @Override
