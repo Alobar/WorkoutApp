@@ -13,7 +13,6 @@ import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -51,19 +50,15 @@ class ExercisePresenter {
                     }
                 })
                 .subscribeOn(Schedulers.io())
-                .filter(new Func1<Exercise, Boolean>() {
-                    @Override
-                    public Boolean call(Exercise exercise) {
-                        return exercise != null;
-                    }
-                })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<Exercise>() {
                     @Override
                     public void call(Exercise exercise) {
                         exerciseId = id;
-                        view.setName(exercise.name);
-                        view.setWeight(Double.toString(exercise.weight));
+                        if (exercise != null) {
+                            view.setName(exercise.name);
+                            view.setWeight(Double.toString(exercise.weight));
+                        }
                     }
                 });
     }

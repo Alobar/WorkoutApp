@@ -14,7 +14,7 @@ import javax.inject.Inject;
 import alobar.android.text.DebouncingTextWatcher;
 import alobar.workout.R;
 import alobar.workout.app.App;
-import alobar.workout.db.DatabaseHelper;
+import alobar.workout.data.Exercise;
 import alobar.workout.db.ExerciseRepo;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,7 +23,6 @@ import butterknife.OnClick;
 public class ExerciseActivity extends AppCompatActivity implements ExercisePresenter.View {
 
     private static final String ARG_EXERCISE_ID = "exerciseId";
-    private static final long INVALID_EXERCISE_ID = -1;
 
     @BindView(R.id.nameInput)
     TextInputLayout nameInput;
@@ -36,11 +35,13 @@ public class ExerciseActivity extends AppCompatActivity implements ExercisePrese
 
     @Inject
     ExerciseRepo exerciseRepo;
+    @Inject
+    ExercisePresenter presenter;
 
     private long exerciseId;
 
     public static Intent newIntent(Context context) {
-        return newIntent(context, INVALID_EXERCISE_ID);
+        return newIntent(context, Exercise.INVALID_ID);
     }
 
     public static Intent newIntent(Context context, long exerciseId) {
@@ -49,9 +50,6 @@ public class ExerciseActivity extends AppCompatActivity implements ExercisePrese
         return result;
     }
 
-    @Inject
-    ExercisePresenter presenter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +57,7 @@ public class ExerciseActivity extends AppCompatActivity implements ExercisePrese
         ButterKnife.bind(this);
         App.from(this).getComponent().inject(this);
 
-        exerciseId = getIntent().getLongExtra(ARG_EXERCISE_ID, INVALID_EXERCISE_ID);
+        exerciseId = getIntent().getLongExtra(ARG_EXERCISE_ID, Exercise.INVALID_ID);
 
         nameEdit.addTextChangedListener(new DebouncingTextWatcher() {
             @Override

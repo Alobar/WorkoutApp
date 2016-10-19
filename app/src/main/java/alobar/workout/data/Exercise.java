@@ -5,6 +5,11 @@ package alobar.workout.data;
  */
 public class Exercise {
 
+    /**
+     * Constant to indicate an invalid _id, i.e. not persisted yet.
+     */
+    public final static long INVALID_ID = 0;
+
     public final long _id;
     public final String name;
     public final double weight;
