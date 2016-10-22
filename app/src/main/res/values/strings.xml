@@ -2,7 +2,6 @@
     <string name="app_name">Alobar Workout</string>
 
     <string name="menu_open">Open menu</string>
-    <string name="menu_close">Close menu</string>
 
     <string name="exercise_add">Add</string>
     <string name="exercise_save">Save</string>
