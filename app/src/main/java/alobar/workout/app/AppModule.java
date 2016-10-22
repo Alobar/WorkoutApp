@@ -7,6 +7,7 @@ import javax.inject.Singleton;
 
 import alobar.workout.db.DatabaseHelper;
 import alobar.workout.db.ExerciseRepo;
+import alobar.workout.features.exercise.ExercisePresenter;
 import dagger.Module;
 import dagger.Provides;
 
@@ -36,5 +37,17 @@ class AppModule {
     @Provides
     ExerciseRepo provideExerciseRepo(DatabaseHelper helper, ContentResolver resolver) {
         return new ExerciseRepo(helper.getWritableDatabase(), resolver);
+    }
+
+    @Provides
+    @Singleton
+    AppStrings provideAppStrings() {
+        return new AppStrings(application.getResources());
+    }
+
+    @Provides
+    @Singleton
+    ExercisePresenter.Strings providerExercisePresenterStrings(AppStrings strings) {
+        return strings;
     }
 }

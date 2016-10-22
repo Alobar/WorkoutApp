@@ -18,16 +18,18 @@ import rx.schedulers.Schedulers;
 /**
  * Presenter for {@link ExerciseActivity}
  */
-class ExercisePresenter {
+public class ExercisePresenter {
 
     private final ExerciseRepo exercises;
+    private final Strings strings;
     private View view;
     private long exerciseId;
     private Subscription exerciseSubscription;
 
     @Inject
-    ExercisePresenter(ExerciseRepo exercises) {
+    ExercisePresenter(ExerciseRepo exercises, Strings strings) {
         this.exercises = exercises;
+        this.strings = strings;
         this.view = NullObject.get(View.class);
     }
 
@@ -71,21 +73,21 @@ class ExercisePresenter {
         view.setWeightHint(validateWeight(value));
     }
 
-    static String validateName(String value) {
+    String validateName(String value) {
         if (value == null || value.trim().length() == 0)
-            return "Please, enter the name.";
+            return strings.exerciseNameRequired();
         return null;
     }
 
-    static String validateWeight(String value) {
+    String validateWeight(String value) {
         if (value == null || value.trim().length() == 0)
-            return "Please, enter the weight.";
+            return strings.exerciseWeightRequired();
         if (!Numbers.isNumeric(value))
-            return "Weight should be a number.";
+            return strings.exerciseWeightMustBeNumber();
         return null;
     }
 
-    static String validate(String name, String weight) {
+    String validate(String name, String weight) {
         MessageBuilder errors = new MessageBuilder(new StringBuilder());
         errors.appendLine(validateName(name));
         errors.appendLine(validateWeight(weight));
@@ -111,5 +113,11 @@ class ExercisePresenter {
         void setWeightHint(String message);
         void toastError(String message);
         void close();
+    }
+
+    public interface Strings {
+        String exerciseNameRequired();
+        String exerciseWeightRequired();
+        String exerciseWeightMustBeNumber();
     }
 }

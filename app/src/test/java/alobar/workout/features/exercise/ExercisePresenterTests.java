@@ -1,5 +1,6 @@
 package alobar.workout.features.exercise;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -9,6 +10,7 @@ import alobar.workout.db.ExerciseRepo;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Tests for {@link ExercisePresenter}
@@ -16,13 +18,23 @@ import static org.mockito.Mockito.verify;
 @RunWith(MockitoJUnitRunner.class)
 public class ExercisePresenterTests {
 
-    static final String NameRequired = "Please, enter the name.";
-    static final String WeightRequired = "Please, enter the weight.";
-    static final String WeightMustBeNumeric = "Weight should be a number.";
+    private static final String NameRequired = "Please, enter the name.";
+    private static final String WeightRequired = "Please, enter the weight.";
+    private static final String WeightMustBeNumeric = "Weight should be a number.";
+
+    private ExercisePresenter.Strings strings;
+
+    @Before
+    public void setUp() {
+        strings = mock(ExercisePresenter.Strings.class);
+        when(strings.exerciseNameRequired()).thenReturn(NameRequired);
+        when(strings.exerciseWeightRequired()).thenReturn(WeightRequired);
+        when(strings.exerciseWeightMustBeNumber()).thenReturn(WeightMustBeNumeric);
+    }
 
     @Test
     public void NameChangeShouldValidate() {
-        ExercisePresenter presenter = new ExercisePresenter(mock(ExerciseRepo.class));
+        ExercisePresenter presenter = new ExercisePresenter(mock(ExerciseRepo.class), strings);
         ExercisePresenter.View view = mock(ExercisePresenter.View.class);
         presenter.onStart(view);
         presenter.onNameChanged("foo");
@@ -31,7 +43,7 @@ public class ExercisePresenterTests {
 
     @Test
     public void WeightChangeShouldValidate() {
-        ExercisePresenter presenter = new ExercisePresenter(mock(ExerciseRepo.class));
+        ExercisePresenter presenter = new ExercisePresenter(mock(ExerciseRepo.class), strings);
         ExercisePresenter.View view = mock(ExercisePresenter.View.class);
         presenter.onStart(view);
         presenter.onWeightChanged("1.0");
@@ -40,26 +52,29 @@ public class ExercisePresenterTests {
 
     @Test
     public void validateName() {
-        assertEquals(ExercisePresenter.validateName(null), NameRequired);
-        assertEquals(ExercisePresenter.validateName(""), NameRequired);
-        assertEquals(ExercisePresenter.validateName(" "), NameRequired);
-        assertEquals(ExercisePresenter.validateName("foo"), null);
+        ExercisePresenter presenter = new ExercisePresenter(mock(ExerciseRepo.class), strings);
+        assertEquals(presenter.validateName(null), NameRequired);
+        assertEquals(presenter.validateName(""), NameRequired);
+        assertEquals(presenter.validateName(" "), NameRequired);
+        assertEquals(presenter.validateName("foo"), null);
     }
 
     @Test
     public void validateWeight() {
-        assertEquals(ExercisePresenter.validateWeight(null), WeightRequired);
-        assertEquals(ExercisePresenter.validateWeight(""), WeightRequired);
-        assertEquals(ExercisePresenter.validateWeight(" "), WeightRequired);
-        assertEquals(ExercisePresenter.validateWeight("foo"), WeightMustBeNumeric);
-        assertEquals(ExercisePresenter.validateWeight("1.0"), null);
+        ExercisePresenter presenter = new ExercisePresenter(mock(ExerciseRepo.class), strings);
+        assertEquals(presenter.validateWeight(null), WeightRequired);
+        assertEquals(presenter.validateWeight(""), WeightRequired);
+        assertEquals(presenter.validateWeight(" "), WeightRequired);
+        assertEquals(presenter.validateWeight("foo"), WeightMustBeNumeric);
+        assertEquals(presenter.validateWeight("1.0"), null);
     }
 
     @Test
     public void validate() {
-        assertEquals(ExercisePresenter.validate("foo", "1.0"), null);
-        assertEquals(ExercisePresenter.validate(null, "1.0"), NameRequired);
-        assertEquals(ExercisePresenter.validate("foo", null), WeightRequired);
-        assertEquals(ExercisePresenter.validate(null, null), NameRequired + "\n" + WeightRequired);
+        ExercisePresenter presenter = new ExercisePresenter(mock(ExerciseRepo.class), strings);
+        assertEquals(presenter.validate("foo", "1.0"), null);
+        assertEquals(presenter.validate(null, "1.0"), NameRequired);
+        assertEquals(presenter.validate("foo", null), WeightRequired);
+        assertEquals(presenter.validate(null, null), NameRequired + "\n" + WeightRequired);
     }
 }

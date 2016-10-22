@@ -11,5 +11,8 @@
     <string name="menu_item_exercise_remove">Remove</string>
     <string name="menu_item_exercise_edit">Edit</string>
     <string name="fragment_exercises_empty_text">Loading…</string>
+    <string name="exerciseNamreRequired">Please, enter a name.</string>
+    <string name="exerciseWeightRequired">Please, enter a weight.</string>
+    <string name="exerciseWeightMustBeNumber">Weight should be a number.</string>
 
 </resources>
