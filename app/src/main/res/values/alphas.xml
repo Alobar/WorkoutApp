@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="UnusedResources">
 
     <!-- Values from Material desgin guidelines
          http://www.google.com/design/spec/style/color.html#color-ui-color-application -->
