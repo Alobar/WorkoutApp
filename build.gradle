@@ -6,7 +6,6 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.0'
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -17,7 +16,7 @@ ext {
     androidBuildToolsVersion = "24.0.1"
     supportLibraryVersion = '24.1.1'
     butterKnifeVersion = '8.4.0'
-    daggerVersion = '2.7'
+    daggerVersion = '2.8'
 }
 
 allprojects {
