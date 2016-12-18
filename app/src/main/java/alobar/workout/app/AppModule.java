@@ -33,18 +33,19 @@ public class AppModule {
         return application.getContentResolver();
     }
 
-    @Provides
     @Singleton
+    @Provides
     AppStrings provideAppStrings() {
         return new AppStrings(application.getResources());
     }
 
-    @Provides
     @Singleton
+    @Provides
     DatabaseHelper provideDatabaseHelper() {
         return new DatabaseHelper(application);
     }
 
+    @Singleton
     @Provides
     ExerciseRepo provideExerciseRepo(DatabaseHelper helper, ContentResolver resolver) {
         return new ExerciseRepo(helper.getWritableDatabase(), resolver);
