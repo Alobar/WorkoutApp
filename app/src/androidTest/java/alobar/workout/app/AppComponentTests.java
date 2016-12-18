@@ -21,8 +21,8 @@ public class AppComponentTests {
 
     @Test
     public void AppComponentShouldBeSingleton() {
-        AppComponent component1 = App.from(mainActivityRule.getActivity()).getComponent();
-        AppComponent component2 = App.from(mainActivityRule.getActivity()).getComponent();
+        AppComponent component1 = WorkoutApp.from(mainActivityRule.getActivity()).getComponent();
+        AppComponent component2 = WorkoutApp.from(mainActivityRule.getActivity()).getComponent();
         assertNotNull(component1);
         assertNotNull(component2);
         assertEqualIdentities(component1, component2);
@@ -30,9 +30,9 @@ public class AppComponentTests {
 
     @Test
     public void DatabaseHelperShouldBeSingleton() {
-        AppComponent component = App.from(mainActivityRule.getActivity()).getComponent();
-        DatabaseHelper helper1 = component.getDatabaseHelper();
-        DatabaseHelper helper2 = component.getDatabaseHelper();
+        AppComponent component = WorkoutApp.from(mainActivityRule.getActivity()).getComponent();
+        DatabaseHelper helper1 = component.provideDatabaseHelper();
+        DatabaseHelper helper2 = component.provideDatabaseHelper();
         assertNotNull(helper1);
         assertNotNull(helper2);
         assertEqualIdentities(helper1, helper2);

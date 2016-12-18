@@ -13,7 +13,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 import alobar.workout.R;
-import alobar.workout.app.App;
+import alobar.workout.app.AppModule;
+import alobar.workout.app.WorkoutApp;
 import alobar.workout.data.Exercise;
 import alobar.workout.db.ExerciseRepo;
 import alobar.workout.features.exercise.ExerciseActivity;
@@ -42,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements ExerciseHolder.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        App.from(this).getComponent().inject(this);
+        injectDependencies();
 
         toolbar.showOverflowMenu();
         setSupportActionBar(toolbar);
@@ -52,6 +53,13 @@ public class MainActivity extends AppCompatActivity implements ExerciseHolder.On
         exerciseList.setEmptyView(ButterKnife.findById(this, R.id.emptyView));
 
         getSupportLoaderManager().initLoader(LOADER_EXERCISES, null, exercisesLoader);
+    }
+
+    private void injectDependencies() {
+        DaggerMainComponent.builder()
+                .appComponent(WorkoutApp.from(this).getComponent())
+                .build()
+                .inject(this);
     }
 
     @Override

@@ -4,12 +4,12 @@ import android.app.Activity;
 import android.app.Application;
 
 /**
- * App's application class
+ * Workout App's application class
  */
-public class App extends Application {
+public class WorkoutApp extends Application {
 
-    public static App from(Activity activity) {
-        return (App) activity.getApplication();
+    public static WorkoutApp from(Activity activity) {
+        return (WorkoutApp) activity.getApplication();
     }
 
     private AppComponent component;

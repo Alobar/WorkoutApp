@@ -2,12 +2,12 @@ package alobar.workout.app;
 
 import android.app.Application;
 import android.content.ContentResolver;
+import android.content.res.Resources;
 
 import javax.inject.Singleton;
 
 import alobar.workout.db.DatabaseHelper;
 import alobar.workout.db.ExerciseRepo;
-import alobar.workout.features.exercise.ExercisePresenter;
 import dagger.Module;
 import dagger.Provides;
 
@@ -15,17 +15,28 @@ import dagger.Provides;
  * Main Dagger module
  */
 @Module
-class AppModule {
+public class AppModule {
 
     private final Application application;
 
-    AppModule(Application application) {
+    public AppModule(Application application) {
         this.application = application;
+    }
+
+    @Provides
+    Resources provideResources() {
+        return application.getResources();
     }
 
     @Provides
     ContentResolver provideContentResolver() {
         return application.getContentResolver();
+    }
+
+    @Provides
+    @Singleton
+    AppStrings provideAppStrings() {
+        return new AppStrings(application.getResources());
     }
 
     @Provides
@@ -37,17 +48,5 @@ class AppModule {
     @Provides
     ExerciseRepo provideExerciseRepo(DatabaseHelper helper, ContentResolver resolver) {
         return new ExerciseRepo(helper.getWritableDatabase(), resolver);
-    }
-
-    @Provides
-    @Singleton
-    AppStrings provideAppStrings() {
-        return new AppStrings(application.getResources());
-    }
-
-    @Provides
-    @Singleton
-    ExercisePresenter.Strings providerExercisePresenterStrings(AppStrings strings) {
-        return strings;
     }
 }

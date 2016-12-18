@@ -13,7 +13,8 @@ import javax.inject.Inject;
 
 import alobar.android.text.DebouncingTextWatcher;
 import alobar.workout.R;
-import alobar.workout.app.App;
+import alobar.workout.app.AppModule;
+import alobar.workout.app.WorkoutApp;
 import alobar.workout.data.Exercise;
 import alobar.workout.db.ExerciseRepo;
 import butterknife.BindView;
@@ -55,7 +56,7 @@ public class ExerciseActivity extends AppCompatActivity implements ExercisePrese
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exercise);
         ButterKnife.bind(this);
-        App.from(this).getComponent().inject(this);
+        injectDependencies();
 
         exerciseId = getIntent().getLongExtra(ARG_EXERCISE_ID, Exercise.INVALID_ID);
 
@@ -71,6 +72,14 @@ public class ExerciseActivity extends AppCompatActivity implements ExercisePrese
                 presenter.onWeightChanged(s.toString());
             }
         });
+    }
+
+    private void injectDependencies() {
+        DaggerExerciseComponent.builder()
+                .appComponent(WorkoutApp.from(this).getComponent())
+                .exerciseModule(new ExerciseModule())
+                .build()
+                .inject(this);
     }
 
     @Override

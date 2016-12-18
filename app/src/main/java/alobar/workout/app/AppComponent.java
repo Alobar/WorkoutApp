@@ -1,10 +1,11 @@
 package alobar.workout.app;
 
+import android.content.res.Resources;
+
 import javax.inject.Singleton;
 
 import alobar.workout.db.DatabaseHelper;
-import alobar.workout.features.exercise.ExerciseActivity;
-import alobar.workout.features.main.MainActivity;
+import alobar.workout.db.ExerciseRepo;
 import dagger.Component;
 
 /**
@@ -14,8 +15,7 @@ import dagger.Component;
 @Component(modules = AppModule.class)
 @Singleton
 public interface AppComponent {
-    void inject(MainActivity activity);
-    void inject(ExerciseActivity activity);
-
-    DatabaseHelper getDatabaseHelper();
+    Resources providerResources();
+    DatabaseHelper provideDatabaseHelper();
+    ExerciseRepo provideExerciseRepo();
 }
