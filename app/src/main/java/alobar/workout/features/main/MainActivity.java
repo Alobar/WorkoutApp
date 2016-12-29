@@ -13,7 +13,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import alobar.workout.R;
-import alobar.workout.app.AppModule;
 import alobar.workout.app.WorkoutApp;
 import alobar.workout.data.Exercise;
 import alobar.workout.db.ExerciseRepo;

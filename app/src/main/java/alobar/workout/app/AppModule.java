@@ -15,11 +15,11 @@ import dagger.Provides;
  * Main Dagger module
  */
 @Module
-public class AppModule {
+class AppModule {
 
-    private final Application application;
+    private final WorkoutApp application;
 
-    public AppModule(Application application) {
+    AppModule(WorkoutApp application) {
         this.application = application;
     }
 
