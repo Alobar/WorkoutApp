@@ -5,11 +5,14 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import org.apache.commons.lang3.Validate;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import alobar.util.Assert;
 import alobar.workout.data.Exercise;
+
+import static dagger.internal.Preconditions.checkNotNull;
 
 /**
  * Repository for {@link Exercise} entities
@@ -63,25 +66,25 @@ public class ExerciseRepo {
     }
 
     public void save(Exercise exercise) {
-        Assert.assigned(exercise);
+        checkNotNull(exercise);
         ContentValues values = new ContentValues();
         values.put(DatabaseContract.Exercise.NAME, exercise.name);
         values.put(DatabaseContract.Exercise.WEIGHT, exercise.weight);
         long _id = exercise._id;
         if (exercise._id == 0) {
             _id = db.insert(DatabaseContract.Exercise.tableName, null, values);
-            Assert.check(_id != 0, "Exercise insert failed");
+            Validate.isTrue(_id != 0, "Exercise insert failed");
         } else {
             int affected = db.update(DatabaseContract.Exercise.tableName, values, DatabaseContract.Exercise._ID + " = ?", new String[]{Long.toString(exercise._id)});
-            Assert.check(affected == 1, "Exercise update failed");
+            Validate.isTrue(affected == 1, "Exercise update failed");
         }
         resolver.notifyChange(DatabaseContract.Exercise.uri(_id), null);
     }
 
     public void deleteById(long _id) {
-        Assert.check(_id != 0, "Cannot delete exercise by id zero");
+        Validate.isTrue(_id != 0, "Cannot delete exercise by id zero");
         int affected = db.delete(DatabaseContract.Exercise.tableName, DatabaseContract.Exercise._ID + " = ?", new String[]{Long.toString(_id)});
-        Assert.check(affected == 1, "Exercise delete failed");
+        Validate.isTrue(affected == 1, "Exercise delete failed");
         resolver.notifyChange(DatabaseContract.Exercise.uri(_id), null);
     }
 }
