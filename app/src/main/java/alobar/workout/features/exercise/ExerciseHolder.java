@@ -17,20 +17,19 @@ import butterknife.OnClick;
  */
 public class ExerciseHolder implements PopupMenu.OnMenuItemClickListener {
 
+    private final Context context;
     private final OnExerciseActions listener;
+    private long _id;
 
     @BindView(R.id.nameText)
     TextView nameText;
     @BindView(R.id.weightText)
     TextView weightText;
 
-    private Context context;
-    private long _id;
-
-    public ExerciseHolder(OnExerciseActions listener, View view, Context context) {
+    public ExerciseHolder(Context context, View view, OnExerciseActions listener) {
+        this.context = context;
         this.listener = listener;
         ButterKnife.bind(this, view);
-        this.context = context;
     }
 
     public void bind(Exercise exercise) {

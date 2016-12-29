@@ -47,7 +47,7 @@ public class ExerciseAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.item_exercise, parent, false);
-            convertView.setTag(new ExerciseHolder(listener, convertView, context));
+            convertView.setTag(new ExerciseHolder(context, convertView, listener));
         }
         ((ExerciseHolder) convertView.getTag()).bind(getItem(position));
         return convertView;
