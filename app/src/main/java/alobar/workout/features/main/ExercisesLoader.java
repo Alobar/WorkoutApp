@@ -15,14 +15,14 @@ import alobar.workout.db.ExerciseRepo;
 /**
  * Loader for all {@link Exercise}s
  */
-public class ExercisesLoader extends AsyncTaskLoader<List<Exercise>> {
+class ExercisesLoader extends AsyncTaskLoader<List<Exercise>> {
 
     private final DatabaseHelper helper;
     private final ContentResolver resolver;
     private ContentObserver observer;
     private List<Exercise> data;
 
-    public ExercisesLoader(Context context) {
+    ExercisesLoader(Context context) {
         super(context);
         helper = new DatabaseHelper(getContext());
         resolver = getContext().getContentResolver();
