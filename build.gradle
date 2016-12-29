@@ -13,8 +13,8 @@ buildscript {
 }
 
 ext {
-    androidBuildToolsVersion = "24.0.1"
-    supportLibraryVersion = '24.1.1'
+    androidBuildToolsVersion = "25.0.2"
+    supportLibraryVersion = '25.1.0'
     butterKnifeVersion = '8.4.0'
     daggerVersion = '2.7'
 }
