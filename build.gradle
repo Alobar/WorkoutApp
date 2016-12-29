@@ -17,7 +17,7 @@ ext {
     androidBuildToolsVersion = "25.0.2"
     supportLibraryVersion = '25.1.0'
     butterKnifeVersion = '8.4.0'
-    daggerVersion = '2.7'
+    daggerVersion = '2.8'
 }
 
 allprojects {
