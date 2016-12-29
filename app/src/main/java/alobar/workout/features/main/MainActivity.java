@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements ExerciseAdapter.O
         }
     }
 
-    private LoaderManager.LoaderCallbacks<List<Exercise>> exercisesLoader = new LoaderManager.LoaderCallbacks<List<Exercise>>() {
+    private final LoaderManager.LoaderCallbacks<List<Exercise>> exercisesLoader = new LoaderManager.LoaderCallbacks<List<Exercise>>() {
         @Override
         public android.support.v4.content.Loader<List<Exercise>> onCreateLoader(int id, Bundle args) {
             return new ExercisesLoader(getApplicationContext());

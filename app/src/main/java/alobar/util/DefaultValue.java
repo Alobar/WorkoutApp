@@ -19,7 +19,7 @@ public class DefaultValue {
     private static double DEFAULT_DOUBLE;
     private static char DEFAULT_CHAR;
 
-    private static Map<Class, Object> result = new HashMap<>();
+    private final static Map<Class, Object> result = new HashMap<>();
 
     static {
         result.put(int.class, DEFAULT_INT);

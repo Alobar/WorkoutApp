@@ -22,7 +22,7 @@ public class AppStrings implements ExercisePresenter.Strings {
 
     @Override
     public String exerciseNameRequired() {
-        return resources.getString(R.string.exerciseNamreRequired);
+        return resources.getString(R.string.exerciseNameRequired);
     }
 
     @Override

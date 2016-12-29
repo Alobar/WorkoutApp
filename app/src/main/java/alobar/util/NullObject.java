@@ -12,7 +12,7 @@ import java.util.Map;
 @SuppressWarnings("unchecked")
 public class NullObject {
 
-    private static Map<Class, Object> cache = new HashMap<>();
+    private final static Map<Class, Object> cache = new HashMap<>();
 
     /**
      * Returns an instance of a Null Object for the specified type.
