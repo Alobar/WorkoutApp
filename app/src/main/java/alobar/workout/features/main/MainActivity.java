@@ -17,13 +17,11 @@ import alobar.workout.app.WorkoutApp;
 import alobar.workout.data.Exercise;
 import alobar.workout.db.ExerciseRepo;
 import alobar.workout.features.exercise.ExerciseActivity;
-import alobar.workout.features.exercise.ExerciseAdapter;
-import alobar.workout.features.exercise.ExerciseHolder;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class MainActivity extends AppCompatActivity implements ExerciseHolder.OnExerciseActions {
+public class MainActivity extends AppCompatActivity implements ExerciseAdapter.OnActionsListener {
 
     private static final int LOADER_EXERCISES = 1;
 

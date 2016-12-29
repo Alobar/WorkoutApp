@@ -1,4 +1,4 @@
-package alobar.workout.features.exercise;
+package alobar.workout.features.main;
 
 import android.content.Context;
 import android.view.MenuItem;
@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import alobar.workout.R;
 import alobar.workout.data.Exercise;
+import alobar.workout.features.main.ExerciseAdapter;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -15,10 +16,10 @@ import butterknife.OnClick;
 /**
  * View Holder for Exercises
  */
-public class ExerciseHolder implements PopupMenu.OnMenuItemClickListener {
+class ExerciseHolder implements PopupMenu.OnMenuItemClickListener {
 
     private final Context context;
-    private final OnExerciseActions listener;
+    private final ExerciseAdapter.OnActionsListener listener;
     private long _id;
 
     @BindView(R.id.nameText)
@@ -26,13 +27,13 @@ public class ExerciseHolder implements PopupMenu.OnMenuItemClickListener {
     @BindView(R.id.weightText)
     TextView weightText;
 
-    public ExerciseHolder(Context context, View view, OnExerciseActions listener) {
+    ExerciseHolder(Context context, View view, ExerciseAdapter.OnActionsListener listener) {
         this.context = context;
         this.listener = listener;
         ButterKnife.bind(this, view);
     }
 
-    public void bind(Exercise exercise) {
+    void bind(Exercise exercise) {
         this._id = exercise._id;
         nameText.setText(exercise.name);
         weightText.setText(String.format("%s", exercise.weight));
@@ -58,10 +59,5 @@ public class ExerciseHolder implements PopupMenu.OnMenuItemClickListener {
             default:
                 return false;
         }
-    }
-
-    public interface OnExerciseActions {
-        void onEditExercise(long _id);
-        void onDeleteExercise(long _id);
     }
 }

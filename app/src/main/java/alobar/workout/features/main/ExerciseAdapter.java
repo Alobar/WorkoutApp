@@ -1,4 +1,4 @@
-package alobar.workout.features.exercise;
+package alobar.workout.features.main;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -14,14 +14,14 @@ import alobar.workout.data.Exercise;
 /**
  * View Adapter for Exercises
  */
-public class ExerciseAdapter extends BaseAdapter {
+class ExerciseAdapter extends BaseAdapter {
 
     private final Context context;
-    private final ExerciseHolder.OnExerciseActions listener;
+    private final OnActionsListener listener;
     private final LayoutInflater inflater;
     private List<Exercise> items;
 
-    public ExerciseAdapter(Context context, ExerciseHolder.OnExerciseActions listener) {
+    ExerciseAdapter(Context context, OnActionsListener listener) {
         super();
         this.context = context;
         this.listener = listener;
@@ -53,8 +53,13 @@ public class ExerciseAdapter extends BaseAdapter {
         return convertView;
     }
 
-    public void changeItems(List<Exercise> items) {
+    void changeItems(List<Exercise> items) {
         this.items = items;
         notifyDataSetChanged();
+    }
+
+    interface OnActionsListener {
+        void onEditExercise(long _id);
+        void onDeleteExercise(long _id);
     }
 }
