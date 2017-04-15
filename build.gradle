@@ -19,6 +19,7 @@ ext {
     SupportLibraryVersion = '25.3.1'
     ButterKnifeVersion = '8.5.1'
     Dagger2Version = '2.10'
+    RxJava2Version = '2.0.8'
 }
 
 allprojects {

@@ -1,7 +1,5 @@
 package alobar.workout.features.exercise;
 
-import java.util.concurrent.Callable;
-
 import javax.inject.Inject;
 
 import alobar.util.MessageBuilder;
@@ -9,11 +7,10 @@ import alobar.util.NullObject;
 import alobar.util.Numbers;
 import alobar.workout.data.Exercise;
 import alobar.workout.db.ExerciseRepo;
-import rx.Observable;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.SerialDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Presenter for {@link ExerciseActivity}
@@ -24,7 +21,7 @@ public class ExercisePresenter {
     private final Strings strings;
     private View view;
     private long exerciseId;
-    private Subscription exerciseSubscription;
+    private SerialDisposable exerciseDisposable = new SerialDisposable();
 
     @Inject
     ExercisePresenter(ExerciseRepo exercises, Strings strings) {
@@ -39,22 +36,27 @@ public class ExercisePresenter {
 
     void onStop() {
         this.view = NullObject.get(View.class);
-        if (exerciseSubscription != null && !exerciseSubscription.isUnsubscribed())
-            exerciseSubscription.unsubscribe();
+        exerciseDisposable.dispose();
     }
 
     void setExerciseId(final long id) {
-        exerciseSubscription = Observable
-                .fromCallable(() -> exercises.findById(id))
+        exerciseId = id;
+        exerciseDisposable.set(Observable.just(id)
+                .flatMap(this::loadExercise)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(exercise -> {
-                    exerciseId = id;
-                    if (exercise != null) {
-                        view.setName(exercise.name);
-                        view.setWeight(Double.toString(exercise.weight));
-                    }
-                });
+                    view.setName(exercise.name);
+                    view.setWeight(Double.toString(exercise.weight));
+                }));
+    }
+
+    private Observable<Exercise> loadExercise(final long exerciseId) {
+        Exercise exercise = exercises.findById(exerciseId);
+        if (exercise != null)
+            return Observable.just(exercise);
+        else
+            return Observable.empty();
     }
 
     void onNameChanged(String value) {
