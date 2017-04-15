@@ -17,17 +17,19 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class ExercisePresenter {
 
-    private final ExerciseRepo exercises;
-    private final Strings strings;
-    private View view;
-    private long exerciseId;
-    private SerialDisposable exerciseDisposable = new SerialDisposable();
+    @Inject
+    ExerciseRepo exercises;
 
     @Inject
-    ExercisePresenter(ExerciseRepo exercises, Strings strings) {
-        this.exercises = exercises;
-        this.strings = strings;
-        this.view = NullObject.get(View.class);
+    Strings strings;
+
+    private View view = NullObject.get(View.class);
+    private SerialDisposable exerciseDisposable = new SerialDisposable();
+    private long exerciseId;
+
+    @Inject
+    ExercisePresenter() {
+        // Default constructor for Dagger
     }
 
     void onStart(View view) {
