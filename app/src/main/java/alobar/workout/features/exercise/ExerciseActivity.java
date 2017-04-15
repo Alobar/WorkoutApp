@@ -13,12 +13,15 @@ import javax.inject.Inject;
 
 import alobar.android.text.DebouncingTextWatcher;
 import alobar.workout.R;
+import alobar.workout.app.AppComponent;
 import alobar.workout.app.WorkoutApp;
+import alobar.workout.dagger.ActivityScope;
 import alobar.workout.data.Exercise;
 import alobar.workout.db.ExerciseRepo;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import dagger.Component;
 
 public class ExerciseActivity extends AppCompatActivity implements ExercisePresenter.View {
 
@@ -74,7 +77,7 @@ public class ExerciseActivity extends AppCompatActivity implements ExercisePrese
     }
 
     private void injectDependencies() {
-        DaggerExerciseComponent.builder()
+        DaggerExerciseActivity_ActivityComponent.builder()
                 .appComponent(WorkoutApp.from(this).getComponent())
                 .exerciseModule(new ExerciseModule())
                 .build()
@@ -136,5 +139,11 @@ public class ExerciseActivity extends AppCompatActivity implements ExercisePrese
     @Override
     public void close() {
         finish();
+    }
+
+    @ActivityScope
+    @Component(modules = {ExerciseModule.class}, dependencies = {AppComponent.class})
+    interface ActivityComponent {
+        void inject(ExerciseActivity activity);
     }
 }

@@ -13,12 +13,15 @@ import java.util.List;
 import javax.inject.Inject;
 
 import alobar.workout.R;
+import alobar.workout.app.AppComponent;
 import alobar.workout.app.WorkoutApp;
+import alobar.workout.dagger.ActivityScope;
 import alobar.workout.data.Exercise;
 import alobar.workout.db.ExerciseRepo;
 import alobar.workout.features.exercise.ExerciseActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import dagger.Component;
 
 
 public class MainActivity extends AppCompatActivity implements ExerciseAdapter.OnActionsListener {
@@ -53,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements ExerciseAdapter.O
     }
 
     private void injectDependencies() {
-        DaggerMainComponent.builder()
+        DaggerMainActivity_ActivityComponent.builder()
                 .appComponent(WorkoutApp.from(this).getComponent())
                 .build()
                 .inject(this);
@@ -117,5 +120,11 @@ public class MainActivity extends AppCompatActivity implements ExerciseAdapter.O
         public void run() {
             repo.deleteById(_id);
         }
+    }
+
+    @ActivityScope
+    @Component(dependencies = {AppComponent.class})
+    interface ActivityComponent {
+        void inject(MainActivity activity);
     }
 }
