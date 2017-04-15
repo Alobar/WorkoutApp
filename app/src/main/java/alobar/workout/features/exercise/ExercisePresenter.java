@@ -45,22 +45,14 @@ public class ExercisePresenter {
 
     void setExerciseId(final long id) {
         exerciseSubscription = Observable
-                .fromCallable(new Callable<Exercise>() {
-                    @Override
-                    public Exercise call() throws Exception {
-                        return exercises.findById(id);
-                    }
-                })
+                .fromCallable(() -> exercises.findById(id))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Exercise>() {
-                    @Override
-                    public void call(Exercise exercise) {
-                        exerciseId = id;
-                        if (exercise != null) {
-                            view.setName(exercise.name);
-                            view.setWeight(Double.toString(exercise.weight));
-                        }
+                .subscribe(exercise -> {
+                    exerciseId = id;
+                    if (exercise != null) {
+                        view.setName(exercise.name);
+                        view.setWeight(Double.toString(exercise.weight));
                     }
                 });
     }
