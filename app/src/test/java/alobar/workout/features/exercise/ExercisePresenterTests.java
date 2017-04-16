@@ -1,10 +1,13 @@
 package alobar.workout.features.exercise;
 
+import android.content.res.Resources;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import alobar.workout.R;
 import alobar.workout.db.ExerciseRepo;
 
 import static org.junit.Assert.assertEquals;
@@ -28,10 +31,10 @@ public class ExercisePresenterTests {
     public void setUp() {
         presenter = new ExercisePresenter();
         presenter.exercises = mock(ExerciseRepo.class);
-        presenter.strings = mock(ExercisePresenter.Strings.class);
-        when(presenter.strings.exerciseNameRequired()).thenReturn(NameRequired);
-        when(presenter.strings.exerciseWeightRequired()).thenReturn(WeightRequired);
-        when(presenter.strings.exerciseWeightMustBeNumber()).thenReturn(WeightMustBeNumeric);
+        presenter.resources = mock(Resources.class);
+        when(presenter.resources.getString(R.string.exerciseNameRequired)).thenReturn(NameRequired);
+        when(presenter.resources.getString(R.string.exerciseWeightRequired)).thenReturn(WeightRequired);
+        when(presenter.resources.getString(R.string.exerciseWeightMustBeNumber)).thenReturn(WeightMustBeNumeric);
     }
 
     @Test

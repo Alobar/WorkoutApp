@@ -79,7 +79,6 @@ public class ExerciseActivity extends AppCompatActivity implements ExercisePrese
     private void injectDependencies() {
         DaggerExerciseActivity_ActivityComponent.builder()
                 .appComponent(WorkoutApp.from(this).getComponent())
-                .exerciseModule(new ExerciseModule())
                 .build()
                 .inject(this);
     }
@@ -142,7 +141,7 @@ public class ExerciseActivity extends AppCompatActivity implements ExercisePrese
     }
 
     @ActivityScope
-    @Component(modules = {ExerciseModule.class}, dependencies = {AppComponent.class})
+    @Component(dependencies = {AppComponent.class})
     interface ActivityComponent {
         void inject(ExerciseActivity activity);
     }

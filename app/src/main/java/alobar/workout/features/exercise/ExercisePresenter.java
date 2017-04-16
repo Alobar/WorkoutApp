@@ -1,10 +1,13 @@
 package alobar.workout.features.exercise;
 
+import android.content.res.Resources;
+
 import javax.inject.Inject;
 
 import alobar.util.MessageBuilder;
 import alobar.util.NullObject;
 import alobar.util.Numbers;
+import alobar.workout.R;
 import alobar.workout.data.Exercise;
 import alobar.workout.db.ExerciseRepo;
 import io.reactivex.Observable;
@@ -15,13 +18,13 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * Presenter for {@link ExerciseActivity}
  */
-public class ExercisePresenter {
+class ExercisePresenter {
 
     @Inject
     ExerciseRepo exercises;
 
     @Inject
-    Strings strings;
+    Resources resources;
 
     private View view = NullObject.get(View.class);
     private SerialDisposable exerciseDisposable = new SerialDisposable();
@@ -71,15 +74,15 @@ public class ExercisePresenter {
 
     String validateName(String value) {
         if (value == null || value.trim().length() == 0)
-            return strings.exerciseNameRequired();
+            return resources.getString(R.string.exerciseNameRequired);
         return null;
     }
 
     String validateWeight(String value) {
         if (value == null || value.trim().length() == 0)
-            return strings.exerciseWeightRequired();
+            return resources.getString(R.string.exerciseWeightRequired);
         if (!Numbers.isNumeric(value))
-            return strings.exerciseWeightMustBeNumber();
+            return resources.getString(R.string.exerciseWeightMustBeNumber);
         return null;
     }
 
@@ -109,11 +112,5 @@ public class ExercisePresenter {
         void setWeightHint(String message);
         void toastError(String message);
         void close();
-    }
-
-    public interface Strings {
-        String exerciseNameRequired();
-        String exerciseWeightRequired();
-        String exerciseWeightMustBeNumber();
     }
 }
