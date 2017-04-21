@@ -17,7 +17,6 @@ import static dagger.internal.Preconditions.checkNotNull;
 /**
  * Repository for {@link Exercise} entities
  */
-@SuppressWarnings("TryFinallyCanBeTryWithResources")
 public class ExerciseRepo {
 
     private final SQLiteDatabase db;
@@ -29,8 +28,7 @@ public class ExerciseRepo {
     }
 
     public List<Exercise> all() {
-        Cursor cursor = db.rawQuery("select * from " + DatabaseContract.Exercise.tableName, null);
-        try {
+        try (Cursor cursor = db.rawQuery("select * from " + DatabaseContract.Exercise.tableName, null)) {
             final int idIndex = cursor.getColumnIndexOrThrow(DatabaseContract.Exercise._ID);
             final int nameIndex = cursor.getColumnIndexOrThrow(DatabaseContract.Exercise.NAME);
             final int weightIndex = cursor.getColumnIndexOrThrow(DatabaseContract.Exercise.WEIGHT);
@@ -43,16 +41,13 @@ public class ExerciseRepo {
                 ));
             }
             return result;
-        } finally {
-            cursor.close();
         }
     }
 
     public Exercise findById(long id) {
         final String query = "select * from " + DatabaseContract.Exercise.tableName +
                 " where " + DatabaseContract.Exercise._ID + " = ?";
-        Cursor cursor = db.rawQuery(query, new String[]{Long.toString(id)});
-        try {
+        try (Cursor cursor = db.rawQuery(query, new String[]{Long.toString(id)})) {
             if (cursor.moveToNext())
                 return new Exercise(
                         cursor.getLong(cursor.getColumnIndexOrThrow(DatabaseContract.Exercise._ID)),
@@ -60,8 +55,6 @@ public class ExerciseRepo {
                         cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseContract.Exercise.WEIGHT))
                 );
             else return null;
-        } finally {
-            cursor.close();
         }
     }
 
