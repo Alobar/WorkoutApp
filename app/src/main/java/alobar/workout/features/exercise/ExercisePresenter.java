@@ -10,7 +10,7 @@ import alobar.util.Numbers;
 import alobar.workout.R;
 import alobar.workout.data.Exercise;
 import alobar.workout.db.ExerciseRepo;
-import io.reactivex.Observable;
+import io.reactivex.Maybe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.SerialDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -46,22 +46,13 @@ class ExercisePresenter {
 
     void setExerciseId(final long id) {
         exerciseId = id;
-        exerciseDisposable.set(Observable.just(id)
-                .flatMap(this::loadExercise)
+        exerciseDisposable.set(Maybe.fromCallable(() -> exercises.findById(id))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(exercise -> {
                     view.setName(exercise.name);
                     view.setWeight(Double.toString(exercise.weight));
                 }));
-    }
-
-    private Observable<Exercise> loadExercise(final long exerciseId) {
-        Exercise exercise = exercises.findById(exerciseId);
-        if (exercise != null)
-            return Observable.just(exercise);
-        else
-            return Observable.empty();
     }
 
     void onNameChanged(String value) {
