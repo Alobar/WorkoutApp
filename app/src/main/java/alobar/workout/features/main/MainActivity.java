@@ -13,7 +13,6 @@ import alobar.workout.R;
 import alobar.workout.app.AppComponent;
 import alobar.workout.app.WorkoutApp;
 import alobar.workout.dagger.ActivityScope;
-import alobar.workout.db.ExerciseRepo;
 import alobar.workout.features.exercise.ExerciseActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,10 +29,10 @@ public class MainActivity extends AppCompatActivity implements ExerciseAdapter.O
     ListView exerciseList;
 
     @Inject
-    ExerciseRepo repo;
+    ReadExercises readExercises;
 
     @Inject
-    ReadExercises readExercises;
+    DeleteExercise deleteExercise;
 
     private CompositeDisposable subscriptions = new CompositeDisposable();
 
@@ -97,22 +96,9 @@ public class MainActivity extends AppCompatActivity implements ExerciseAdapter.O
 
     @Override
     public void onDeleteExercise(final long _id) {
-        new DeleteByIdThread(repo, _id).start();
-    }
-
-    private static class DeleteByIdThread extends Thread {
-        private final ExerciseRepo repo;
-        private final long _id;
-
-        DeleteByIdThread(ExerciseRepo repo, long _id) {
-            this.repo = repo;
-            this._id = _id;
-        }
-
-        @Override
-        public void run() {
-            repo.deleteById(_id);
-        }
+        deleteExercise.execute(_id)
+                .doOnError(Throwable::printStackTrace)
+                .subscribe();
     }
 
     @ActivityScope

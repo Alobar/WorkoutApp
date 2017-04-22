@@ -31,6 +31,7 @@ class ReadExercises {
     }
 
     /**
+
      * Return an Observable with all Exercises, emitting at subscription and content change notifications.
      */
     Observable<List<Exercise>> execute() {
