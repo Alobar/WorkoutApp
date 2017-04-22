@@ -9,7 +9,6 @@ import alobar.util.NullObject;
 import alobar.util.Numbers;
 import alobar.workout.R;
 import alobar.workout.data.Exercise;
-import alobar.workout.db.ExerciseRepo;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.SerialDisposable;
 
@@ -19,10 +18,10 @@ import io.reactivex.disposables.SerialDisposable;
 class ExercisePresenter {
 
     @Inject
-    ExerciseRepo exercises;
+    ReadExercise readExercise;
 
     @Inject
-    ReadExercise readExercise;
+    WriteExercise writeExercise;
 
     @Inject
     Resources resources;
@@ -96,7 +95,9 @@ class ExercisePresenter {
         }
 
         double weightValue = Double.parseDouble(weight);
-        exercises.save(new Exercise(exerciseId, name, weightValue));
+        writeExercise.execute(exerciseId, name, weightValue)
+                .doOnError(Throwable::printStackTrace)
+                .subscribe();
         view.close();
     }
 
