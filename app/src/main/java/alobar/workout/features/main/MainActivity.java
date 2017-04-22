@@ -12,8 +12,8 @@ import javax.inject.Inject;
 import alobar.workout.R;
 import alobar.workout.app.AppComponent;
 import alobar.workout.app.WorkoutApp;
+import alobar.workout.dagger.ActivityModule;
 import alobar.workout.dagger.ActivityScope;
-import alobar.workout.features.exercise.ExerciseActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import dagger.Component;
@@ -27,6 +27,9 @@ public class MainActivity extends AppCompatActivity implements ExerciseAdapter.O
     Toolbar toolbar;
     @BindView(R.id.exerciseList)
     ListView exerciseList;
+
+    @Inject
+    MainNavigator mainNavigator;
 
     @Inject
     ReadExercises readExercises;
@@ -67,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements ExerciseAdapter.O
     private void injectDependencies() {
         DaggerMainActivity_ActivityComponent.builder()
                 .appComponent(WorkoutApp.from(this).getComponent())
+                .activityModule(new ActivityModule(this))
                 .build()
                 .inject(this);
     }
@@ -82,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements ExerciseAdapter.O
         int itemId = item.getItemId();
         switch (itemId) {
             case R.id.addExerciseItem:
-                startActivity(ExerciseActivity.newIntent(this));
+                mainNavigator.showAddExercise();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -91,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements ExerciseAdapter.O
 
     @Override
     public void onEditExercise(long _id) {
-        startActivity(ExerciseActivity.newIntent(this, _id));
+        mainNavigator.showEditExercise(_id);
     }
 
     @Override
@@ -102,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements ExerciseAdapter.O
     }
 
     @ActivityScope
-    @Component(dependencies = {AppComponent.class})
+    @Component(dependencies = {AppComponent.class}, modules = {ActivityModule.class})
     interface ActivityComponent {
         void inject(MainActivity activity);
     }
