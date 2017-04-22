@@ -1,14 +1,11 @@
 package alobar.workout.features.main;
 
 import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -16,17 +13,16 @@ import alobar.workout.R;
 import alobar.workout.app.AppComponent;
 import alobar.workout.app.WorkoutApp;
 import alobar.workout.dagger.ActivityScope;
-import alobar.workout.data.Exercise;
 import alobar.workout.db.ExerciseRepo;
 import alobar.workout.features.exercise.ExerciseActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import dagger.Component;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 
 
 public class MainActivity extends AppCompatActivity implements ExerciseAdapter.OnActionsListener {
-
-    private static final int LOADER_EXERCISES = 1;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -36,7 +32,10 @@ public class MainActivity extends AppCompatActivity implements ExerciseAdapter.O
     @Inject
     ExerciseRepo repo;
 
-    private ExerciseAdapter adapter;
+    @Inject
+    ReadExercises readExercises;
+
+    private CompositeDisposable subscriptions = new CompositeDisposable();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,11 +47,22 @@ public class MainActivity extends AppCompatActivity implements ExerciseAdapter.O
         toolbar.showOverflowMenu();
         setSupportActionBar(toolbar);
 
-        adapter = new ExerciseAdapter(this, this);
+        ExerciseAdapter adapter = new ExerciseAdapter(this, this);
         exerciseList.setAdapter(adapter);
         exerciseList.setEmptyView(ButterKnife.findById(this, R.id.emptyView));
 
-        getSupportLoaderManager().initLoader(LOADER_EXERCISES, null, exercisesLoader);
+        subscriptions.add(
+                readExercises.execute()
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnNext(adapter::changeItems)
+                        .doOnError(Throwable::printStackTrace)
+                        .subscribe());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        subscriptions.dispose();
     }
 
     private void injectDependencies() {
@@ -79,23 +89,6 @@ public class MainActivity extends AppCompatActivity implements ExerciseAdapter.O
                 return super.onOptionsItemSelected(item);
         }
     }
-
-    private final LoaderManager.LoaderCallbacks<List<Exercise>> exercisesLoader = new LoaderManager.LoaderCallbacks<List<Exercise>>() {
-        @Override
-        public android.support.v4.content.Loader<List<Exercise>> onCreateLoader(int id, Bundle args) {
-            return new ExercisesLoader(getApplicationContext());
-        }
-
-        @Override
-        public void onLoadFinished(android.support.v4.content.Loader<List<Exercise>> loader, List<Exercise> data) {
-            adapter.changeItems(data);
-        }
-
-        @Override
-        public void onLoaderReset(android.support.v4.content.Loader<List<Exercise>> loader) {
-            adapter.changeItems(null);
-        }
-    };
 
     @Override
     public void onEditExercise(long _id) {
