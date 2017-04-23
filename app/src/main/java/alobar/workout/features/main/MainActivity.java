@@ -7,22 +7,22 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
-import alobar.reactivex.RxAssert;
 import alobar.workout.R;
 import alobar.workout.app.AppComponent;
 import alobar.workout.app.WorkoutApp;
 import alobar.workout.dagger.ActivityModule;
 import alobar.workout.dagger.ActivityScope;
+import alobar.workout.data.Exercise;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import dagger.Component;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
 
 
-public class MainActivity extends AppCompatActivity implements ExerciseAdapter.OnActionsListener {
+public class MainActivity extends AppCompatActivity implements MainPresenter.View, ExerciseAdapter.OnActionsListener {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -30,15 +30,9 @@ public class MainActivity extends AppCompatActivity implements ExerciseAdapter.O
     ListView exerciseList;
 
     @Inject
-    MainNavigator mainNavigator;
+    MainPresenter presenter;
 
-    @Inject
-    ReadExercises readExercises;
-
-    @Inject
-    DeleteExercise deleteExercise;
-
-    private CompositeDisposable subscriptions = new CompositeDisposable();
+    private ExerciseAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,28 +44,21 @@ public class MainActivity extends AppCompatActivity implements ExerciseAdapter.O
         toolbar.showOverflowMenu();
         setSupportActionBar(toolbar);
 
-        ExerciseAdapter adapter = new ExerciseAdapter(this, this);
+        adapter = new ExerciseAdapter(this, this);
         exerciseList.setAdapter(adapter);
         exerciseList.setEmptyView(ButterKnife.findById(this, R.id.emptyView));
-
-        subscriptions.add(
-                readExercises.execute()
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(adapter::changeItems, RxAssert::noError));
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        subscriptions.dispose();
+    protected void onStart() {
+        super.onStart();
+        presenter.onStart(this);
     }
 
-    private void injectDependencies() {
-        DaggerMainActivity_ActivityComponent.builder()
-                .appComponent(WorkoutApp.from(this).getComponent())
-                .activityModule(new ActivityModule(this))
-                .build()
-                .inject(this);
+    @Override
+    protected void onStop() {
+        super.onStop();
+        presenter.onStop();
     }
 
     @Override
@@ -85,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements ExerciseAdapter.O
         int itemId = item.getItemId();
         switch (itemId) {
             case R.id.addExerciseItem:
-                mainNavigator.showAddExercise();
+                presenter.onAddExerciseClick();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -94,13 +81,25 @@ public class MainActivity extends AppCompatActivity implements ExerciseAdapter.O
 
     @Override
     public void onEditExercise(long _id) {
-        mainNavigator.showEditExercise(_id);
+        presenter.onEditExercise(_id);
     }
 
     @Override
     public void onDeleteExercise(final long _id) {
-        deleteExercise.execute(_id)
-                .subscribe(RxAssert::noError);
+        presenter.onDeleteExercise(_id);
+    }
+
+    @Override
+    public void setExercises(List<Exercise> exercises) {
+        adapter.changeItems(exercises);
+    }
+
+    private void injectDependencies() {
+        DaggerMainActivity_ActivityComponent.builder()
+                .appComponent(WorkoutApp.from(this).getComponent())
+                .activityModule(new ActivityModule(this))
+                .build()
+                .inject(this);
     }
 
     @ActivityScope
