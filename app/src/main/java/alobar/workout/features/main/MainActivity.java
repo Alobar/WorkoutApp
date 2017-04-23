@@ -9,6 +9,7 @@ import android.widget.ListView;
 
 import javax.inject.Inject;
 
+import alobar.reactivex.RxAssert;
 import alobar.workout.R;
 import alobar.workout.app.AppComponent;
 import alobar.workout.app.WorkoutApp;
@@ -56,9 +57,7 @@ public class MainActivity extends AppCompatActivity implements ExerciseAdapter.O
         subscriptions.add(
                 readExercises.execute()
                         .observeOn(AndroidSchedulers.mainThread())
-                        .doOnNext(adapter::changeItems)
-                        .doOnError(Throwable::printStackTrace)
-                        .subscribe());
+                        .subscribe(adapter::changeItems, RxAssert::noError));
     }
 
     @Override
@@ -101,8 +100,7 @@ public class MainActivity extends AppCompatActivity implements ExerciseAdapter.O
     @Override
     public void onDeleteExercise(final long _id) {
         deleteExercise.execute(_id)
-                .doOnError(Throwable::printStackTrace)
-                .subscribe();
+                .subscribe(RxAssert::noError);
     }
 
     @ActivityScope

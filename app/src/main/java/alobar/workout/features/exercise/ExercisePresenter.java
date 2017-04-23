@@ -4,6 +4,7 @@ import android.content.res.Resources;
 
 import javax.inject.Inject;
 
+import alobar.reactivex.RxAssert;
 import alobar.util.MessageBuilder;
 import alobar.util.NullObject;
 import alobar.util.Numbers;
@@ -48,9 +49,7 @@ class ExercisePresenter {
         exerciseId = id;
         exerciseDisposable.set(readExercise.execute(id)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSuccess(this::showExercise)
-                .doOnError(Throwable::printStackTrace)
-                .subscribe());
+                .subscribe(this::showExercise, RxAssert::noError));
     }
 
     private void showExercise(Exercise exercise) {
@@ -96,8 +95,7 @@ class ExercisePresenter {
 
         double weightValue = Double.parseDouble(weight);
         writeExercise.execute(exerciseId, name, weightValue)
-                .doOnError(Throwable::printStackTrace)
-                .subscribe();
+                .subscribe(RxAssert::noError);
         view.close();
     }
 
