@@ -27,6 +27,8 @@ public class ExerciseActivity extends AppCompatActivity implements ExercisePrese
 
     private static final String ARG_EXERCISE_ID = "exerciseId";
 
+    private long exerciseId;
+
     @BindView(R.id.nameInput)
     TextInputLayout nameInput;
     @BindView(R.id.nameEdit)
@@ -40,8 +42,6 @@ public class ExerciseActivity extends AppCompatActivity implements ExercisePrese
     ExerciseRepo exerciseRepo;
     @Inject
     ExercisePresenter presenter;
-
-    private long exerciseId;
 
     public static Intent newIntent(Context context) {
         return newIntent(context, Exercise.INVALID_ID);

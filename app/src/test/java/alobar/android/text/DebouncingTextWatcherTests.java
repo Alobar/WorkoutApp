@@ -14,7 +14,7 @@ import static org.junit.Assert.assertEquals;
  */
 public class DebouncingTextWatcherTests {
 
-    private SpyWatcher watcher = new SpyWatcher();
+    private final SpyWatcher watcher = new SpyWatcher();
 
     @Test
     public void nullToNull() {

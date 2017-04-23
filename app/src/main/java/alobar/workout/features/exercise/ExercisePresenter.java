@@ -18,6 +18,10 @@ import io.reactivex.disposables.SerialDisposable;
  */
 class ExercisePresenter {
 
+    private final SerialDisposable exerciseDisposable = new SerialDisposable();
+    private View view = NullObject.get(View.class);
+    private long exerciseId;
+
     @Inject
     ReadExercise readExercise;
 
@@ -26,10 +30,6 @@ class ExercisePresenter {
 
     @Inject
     Resources resources;
-
-    private View view = NullObject.get(View.class);
-    private SerialDisposable exerciseDisposable = new SerialDisposable();
-    private long exerciseId;
 
     @Inject
     ExercisePresenter() {

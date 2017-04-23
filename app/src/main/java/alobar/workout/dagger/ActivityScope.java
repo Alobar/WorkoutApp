@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import javax.inject.Scope;
 
 /**
- * Dagger scope for activity lifecycles
+ * Dagger scope for activity life cycles
  */
 @Scope
 @Retention(RetentionPolicy.RUNTIME)
