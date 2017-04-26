@@ -30,8 +30,11 @@ dependencies {
     compile "com.android.support:appcompat-v7:$SupportLibraryVersion"
     compile "com.android.support:design:$SupportLibraryVersion"
 
+    compile 'com.google.auto.value:auto-value:1.4.1'
+
     compile "io.reactivex.rxjava2:rxjava:$RxJava2Version"
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    compile 'com.jakewharton.rxbinding2:rxbinding:2.0.0'
 
     compile 'org.apache.commons:commons-lang3:3.5'
 
