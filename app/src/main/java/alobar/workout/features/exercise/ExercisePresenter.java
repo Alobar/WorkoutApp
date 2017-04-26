@@ -1,6 +1,9 @@
 package alobar.workout.features.exercise;
 
 import android.content.res.Resources;
+import android.support.annotation.Nullable;
+
+import com.google.auto.value.AutoValue;
 
 import javax.inject.Inject;
 
@@ -10,8 +13,11 @@ import alobar.util.NullObject;
 import alobar.util.Numbers;
 import alobar.workout.R;
 import alobar.workout.data.Exercise;
+import io.reactivex.Maybe;
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.SerialDisposable;
+import io.reactivex.internal.operators.observable.ObservableBlockingSubscribe;
 
 /**
  * Presenter for {@link ExerciseActivity}
@@ -38,6 +44,23 @@ class ExercisePresenter {
 
     void onStart(View view) {
         this.view = view;
+
+        this.view.name()
+                .flatMap(this::validateNameAsync);
+
+//        Observable<ChangeEvent> changeEvents = Observable.zip(
+//                this.view.name(),
+//                this.view.weight(),
+//                ChangeEvent::create
+//        );
+
+    }
+
+    private Observable<ValidateNameEvent> validateNameAsync(String name) {
+        if (name == null || name.isEmpty())
+            return Observable.just(ValidateNameEvent.create("Please, give this a name..."));
+        else
+            return Observable.just(ValidateNameEvent.clear());
     }
 
     void onStop() {
@@ -53,8 +76,7 @@ class ExercisePresenter {
     }
 
     private void showExercise(Exercise exercise) {
-        view.setName(exercise.name);
-        view.setWeight(Double.toString(exercise.weight));
+        view.render(ViewState.create(exercise.name, Double.toString(exercise.weight)));
     }
 
     void onNameChanged(String value) {
@@ -100,11 +122,73 @@ class ExercisePresenter {
     }
 
     public interface View {
-        void setName(String value);
         void setNameHint(String message);
-        void setWeight(String value);
         void setWeightHint(String message);
         void toastError(String message);
         void close();
+
+        Observable<String> name();
+        Observable<String> weight();
+        Observable<SaveCommand> saveCommand();
+
+        void render(ViewState state);
+    }
+
+    @AutoValue
+    static abstract class SaveCommand {
+        abstract String name();
+        abstract String weight();
+
+        static SaveCommand create(String name, String weight) {
+            return new AutoValue_ExercisePresenter_SaveCommand(name, weight);
+        }
+    }
+
+    @AutoValue
+    static abstract class ValidateNameEvent {
+        @Nullable abstract String nameHint();
+        static ValidateNameEvent create(String nameHint) {
+            return new AutoValue_ExercisePresenter_ValidateNameEvent(nameHint);
+        }
+        static ValidateNameEvent clear() {
+            return new AutoValue_ExercisePresenter_ValidateNameEvent(null);
+        }
+    }
+
+    @AutoValue
+    static abstract class ChangeEvent {
+        abstract String name();
+        abstract String weight();
+
+        static ChangeEvent create(String name, String weight) {
+            return new AutoValue_ExercisePresenter_ChangeEvent(name, weight);
+        }
+    }
+
+    @AutoValue
+    static abstract class ViewState {
+        abstract String name();
+        abstract String nameHint();
+        abstract String weight();
+        abstract String weightHint();
+        abstract Throwable error();
+        abstract boolean isFinished();
+
+        static ViewState create(String name, String weight) {
+            return new AutoValue_ExercisePresenter_ViewState.Builder().name(name).weight(weight).build();
+        }
+
+        abstract ViewState.Builder builder();
+
+        @AutoValue.Builder
+        abstract static class Builder {
+            abstract ViewState.Builder name(String value);
+            abstract ViewState.Builder nameHint(String value);
+            abstract ViewState.Builder weight(String value);
+            abstract ViewState.Builder weightHint(String value);
+            abstract ViewState.Builder error(Throwable value);
+            abstract ViewState.Builder isFinished(boolean value);
+            abstract ViewState build();
+        }
     }
 }

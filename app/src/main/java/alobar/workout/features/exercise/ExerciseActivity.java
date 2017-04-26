@@ -6,8 +6,12 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.jakewharton.rxbinding2.view.RxView;
+import com.jakewharton.rxbinding2.widget.RxTextView;
 
 import javax.inject.Inject;
 
@@ -22,6 +26,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import dagger.Component;
+import io.reactivex.Observable;
 
 public class ExerciseActivity extends AppCompatActivity implements ExercisePresenter.View {
 
@@ -37,6 +42,8 @@ public class ExerciseActivity extends AppCompatActivity implements ExercisePrese
     TextInputLayout weightInput;
     @BindView(R.id.weightEdit)
     EditText weightEdit;
+    @BindView(R.id.saveButton)
+    Button saveButton;
 
     @Inject
     ExerciseRepo exerciseRepo;
@@ -76,13 +83,6 @@ public class ExerciseActivity extends AppCompatActivity implements ExercisePrese
         });
     }
 
-    private void injectDependencies() {
-        DaggerExerciseActivity_ActivityComponent.builder()
-                .appComponent(WorkoutApp.from(this).getComponent())
-                .build()
-                .inject(this);
-    }
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -109,19 +109,9 @@ public class ExerciseActivity extends AppCompatActivity implements ExercisePrese
     }
 
     @Override
-    public void setName(String value) {
-        nameEdit.setText(value);
-    }
-
-    @Override
     public void setNameHint(String message) {
         nameInput.setError(message);
         nameInput.setErrorEnabled(message != null);
-    }
-
-    @Override
-    public void setWeight(String value) {
-        weightEdit.setText(value);
     }
 
     @Override
@@ -138,6 +128,53 @@ public class ExerciseActivity extends AppCompatActivity implements ExercisePrese
     @Override
     public void close() {
         finish();
+    }
+
+    @Override
+    public Observable<String> name() {
+        return RxTextView.textChanges(nameEdit)
+                .map(CharSequence::toString)
+                .distinctUntilChanged();
+    }
+
+    @Override
+    public Observable<String> weight() {
+        return RxTextView.textChanges(weightEdit)
+                .map(CharSequence::toString)
+                .distinctUntilChanged();
+    }
+
+    @Override
+    public Observable<ExercisePresenter.SaveCommand> saveCommand() {
+        return RxView.clicks(saveButton)
+                .map(o -> ExercisePresenter.SaveCommand.create(
+                        nameEdit.getText().toString(),
+                        weightEdit.getText().toString())
+                );
+    }
+
+    @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
+    @Override
+    public void render(ExercisePresenter.ViewState state) {
+        nameEdit.setText(state.name());
+        nameInput.setErrorEnabled(state.nameHint() != null);
+        nameInput.setError(state.nameHint());
+        weightEdit.setText(state.weight());
+        weightInput.setErrorEnabled(state.weightHint() != null);
+        weightInput.setError(state.weight());
+        if (state.error() != null) {
+            Toast.makeText(this, state.error().getMessage(), Toast.LENGTH_SHORT).show();
+        }
+        if (state.isFinished()) {
+            finish();
+        }
+    }
+
+    private void injectDependencies() {
+        DaggerExerciseActivity_ActivityComponent.builder()
+                .appComponent(WorkoutApp.from(this).getComponent())
+                .build()
+                .inject(this);
     }
 
     @ActivityScope
