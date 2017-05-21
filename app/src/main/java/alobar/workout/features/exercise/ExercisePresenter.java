@@ -10,6 +10,7 @@ import alobar.util.NullObject;
 import alobar.util.Numbers;
 import alobar.workout.R;
 import alobar.workout.data.Exercise;
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -38,6 +39,8 @@ class ExercisePresenter {
 
     void onStart(View view) {
         this.view = view;
+        disposables.add(view.getName().subscribe(this::onNameChanged));
+        disposables.add(view.getWeight().subscribe(this::onWeightChanged));
     }
 
     void onStop() {
@@ -100,6 +103,8 @@ class ExercisePresenter {
     }
 
     public interface View {
+        Observable<String> getName();
+        Observable<String> getWeight();
         void setName(String value);
         void setNameHint(String message);
         void setWeight(String value);

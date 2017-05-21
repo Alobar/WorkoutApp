@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import alobar.workout.R;
+import io.reactivex.Observable;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -38,6 +39,8 @@ public class ExercisePresenterTests {
     @Test
     public void NameChangeShouldValidate() {
         ExercisePresenter.View view = mock(ExercisePresenter.View.class);
+        when(view.getName()).thenReturn(Observable.empty());
+        when(view.getWeight()).thenReturn(Observable.empty());
         presenter.onStart(view);
         presenter.onNameChanged("foo");
         verify(view).setNameHint(null);
@@ -46,6 +49,8 @@ public class ExercisePresenterTests {
     @Test
     public void WeightChangeShouldValidate() {
         ExercisePresenter.View view = mock(ExercisePresenter.View.class);
+        when(view.getName()).thenReturn(Observable.empty());
+        when(view.getWeight()).thenReturn(Observable.empty());
         presenter.onStart(view);
         presenter.onWeightChanged("1.0");
         verify(view).setWeightHint(null);

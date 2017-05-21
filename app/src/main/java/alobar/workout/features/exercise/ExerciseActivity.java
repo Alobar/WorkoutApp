@@ -5,13 +5,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.jakewharton.rxbinding2.widget.RxTextView;
+
 import javax.inject.Inject;
 
-import alobar.android.text.DebouncingTextWatcher;
 import alobar.workout.R;
 import alobar.workout.app.AppComponent;
 import alobar.workout.app.WorkoutApp;
@@ -22,6 +22,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import dagger.Component;
+import io.reactivex.Observable;
 
 public class ExerciseActivity extends AppCompatActivity implements ExercisePresenter.View {
 
@@ -61,19 +62,6 @@ public class ExerciseActivity extends AppCompatActivity implements ExercisePrese
         injectDependencies();
 
         exerciseId = getIntent().getLongExtra(ARG_EXERCISE_ID, Exercise.INVALID_ID);
-
-        nameEdit.addTextChangedListener(new DebouncingTextWatcher() {
-            @Override
-            public void onDebouncedTextChanged(Editable s) {
-                presenter.onNameChanged(s.toString());
-            }
-        });
-        weightEdit.addTextChangedListener(new DebouncingTextWatcher() {
-            @Override
-            public void onDebouncedTextChanged(Editable s) {
-                presenter.onWeightChanged(s.toString());
-            }
-        });
     }
 
     private void injectDependencies() {
@@ -106,6 +94,20 @@ public class ExerciseActivity extends AppCompatActivity implements ExercisePrese
     @OnClick(R.id.cancelButton)
     void onCancelButtonClick() {
         finish();
+    }
+
+    @Override
+    public Observable<String> getName() {
+        return RxTextView.textChanges(nameEdit)
+                .map(CharSequence::toString)
+                .distinctUntilChanged();
+    }
+
+    @Override
+    public Observable<String> getWeight() {
+        return RxTextView.textChanges(weightEdit)
+                .map(CharSequence::toString)
+                .distinctUntilChanged();
     }
 
     @Override
