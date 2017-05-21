@@ -11,14 +11,14 @@ import alobar.util.Numbers;
 import alobar.workout.R;
 import alobar.workout.data.Exercise;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.SerialDisposable;
+import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * Presenter for {@link ExerciseActivity}
  */
 class ExercisePresenter {
 
-    private final SerialDisposable exerciseDisposable = new SerialDisposable();
+    private final CompositeDisposable disposables = new CompositeDisposable();
     private View view = NullObject.get(View.class);
     private long exerciseId;
 
@@ -42,12 +42,12 @@ class ExercisePresenter {
 
     void onStop() {
         this.view = NullObject.get(View.class);
-        exerciseDisposable.dispose();
+        disposables.clear();
     }
 
     void setExerciseId(final long id) {
         exerciseId = id;
-        exerciseDisposable.set(readExercise.execute(id)
+        disposables.add(readExercise.execute(id)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::showExercise, RxAssert::noError));
     }
