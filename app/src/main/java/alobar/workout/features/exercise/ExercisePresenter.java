@@ -2,6 +2,8 @@ package alobar.workout.features.exercise;
 
 import android.content.res.Resources;
 
+import com.google.auto.value.AutoValue;
+
 import javax.inject.Inject;
 
 import alobar.reactivex.RxAssert;
@@ -41,6 +43,7 @@ class ExercisePresenter {
         this.view = view;
         disposables.add(view.getName().subscribe(this::onNameChanged));
         disposables.add(view.getWeight().subscribe(this::onWeightChanged));
+        disposables.add(view.getSaveAction().subscribe(this::onSave));
     }
 
     void onStop() {
@@ -89,7 +92,10 @@ class ExercisePresenter {
         return errors.length() > 0 ? errors.toString() : null;
     }
 
-    void onSave(String name, String weight) {
+    void onSave(SaveAction action) {
+        String name = action.name();
+        String weight = action.weight();
+
         String error = validate(name, weight);
         if (error != null) {
             view.toastError(error);
@@ -105,11 +111,21 @@ class ExercisePresenter {
     public interface View {
         Observable<String> getName();
         Observable<String> getWeight();
+        Observable<SaveAction> getSaveAction();
         void setName(String value);
         void setNameHint(String message);
         void setWeight(String value);
         void setWeightHint(String message);
         void toastError(String message);
         void close();
+    }
+
+    @AutoValue
+    static abstract class SaveAction {
+        abstract String name();
+        abstract String weight();
+        static SaveAction create(String name, String weight) {
+            return new AutoValue_ExercisePresenter_SaveAction(name, weight);
+        }
     }
 }

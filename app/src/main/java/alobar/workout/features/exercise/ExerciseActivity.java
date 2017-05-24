@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.jakewharton.rxbinding2.view.RxView;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 
 import javax.inject.Inject;
@@ -84,13 +85,6 @@ public class ExerciseActivity extends AppCompatActivity implements ExercisePrese
         presenter.onStop();
     }
 
-    @OnClick(R.id.saveButton)
-    void onSaveButtonClick() {
-        String name = nameEdit.getText().toString().trim();
-        String weight = weightEdit.getText().toString().trim();
-        presenter.onSave(name, weight);
-    }
-
     @OnClick(R.id.cancelButton)
     void onCancelButtonClick() {
         finish();
@@ -108,6 +102,14 @@ public class ExerciseActivity extends AppCompatActivity implements ExercisePrese
         return RxTextView.textChanges(weightEdit)
                 .map(CharSequence::toString)
                 .distinctUntilChanged();
+    }
+
+    @Override
+    public Observable<ExercisePresenter.SaveAction> getSaveAction() {
+        return RxView.clicks(ButterKnife.findById(this, R.id.saveButton))
+                .map(__ -> ExercisePresenter.SaveAction.create(
+                        nameEdit.getText().toString().trim(),
+                        weightEdit.getText().toString().trim()));
     }
 
     @Override

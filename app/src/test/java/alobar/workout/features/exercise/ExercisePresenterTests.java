@@ -41,6 +41,7 @@ public class ExercisePresenterTests {
         ExercisePresenter.View view = mock(ExercisePresenter.View.class);
         when(view.getName()).thenReturn(Observable.empty());
         when(view.getWeight()).thenReturn(Observable.empty());
+        when(view.getSaveAction()).thenReturn(Observable.never());
         presenter.onStart(view);
         presenter.onNameChanged("foo");
         verify(view).setNameHint(null);
@@ -51,6 +52,7 @@ public class ExercisePresenterTests {
         ExercisePresenter.View view = mock(ExercisePresenter.View.class);
         when(view.getName()).thenReturn(Observable.empty());
         when(view.getWeight()).thenReturn(Observable.empty());
+        when(view.getSaveAction()).thenReturn(Observable.never());
         presenter.onStart(view);
         presenter.onWeightChanged("1.0");
         verify(view).setWeightHint(null);
