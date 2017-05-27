@@ -113,6 +113,11 @@ public class ExerciseActivity extends AppCompatActivity implements ExercisePrese
     }
 
     @Override
+    public Observable<Object> getCloseAction() {
+        return RxView.clicks(ButterKnife.findById(this, R.id.cancelButton));
+    }
+
+    @Override
     public void setName(String value) {
         nameEdit.setText(value);
     }

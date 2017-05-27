@@ -26,6 +26,7 @@ public class ExercisePresenterTests {
     private static final String WeightMustBeNumeric = "Weight should be a number.";
 
     private ExercisePresenter presenter;
+    private ExercisePresenter.View view;
 
     @Before
     public void setUp() {
@@ -34,14 +35,16 @@ public class ExercisePresenterTests {
         when(presenter.resources.getString(R.string.exerciseNameRequired)).thenReturn(NameRequired);
         when(presenter.resources.getString(R.string.exerciseWeightRequired)).thenReturn(WeightRequired);
         when(presenter.resources.getString(R.string.exerciseWeightMustBeNumber)).thenReturn(WeightMustBeNumeric);
+
+        view = mock(ExercisePresenter.View.class);
+        when(view.getName()).thenReturn(Observable.never());
+        when(view.getWeight()).thenReturn(Observable.never());
+        when(view.getSaveAction()).thenReturn(Observable.never());
+        when(view.getCloseAction()).thenReturn(Observable.never());
     }
 
     @Test
     public void NameChangeShouldValidate() {
-        ExercisePresenter.View view = mock(ExercisePresenter.View.class);
-        when(view.getName()).thenReturn(Observable.empty());
-        when(view.getWeight()).thenReturn(Observable.empty());
-        when(view.getSaveAction()).thenReturn(Observable.never());
         presenter.onStart(view);
         presenter.onNameChanged("foo");
         verify(view).setNameHint(null);
@@ -49,10 +52,6 @@ public class ExercisePresenterTests {
 
     @Test
     public void WeightChangeShouldValidate() {
-        ExercisePresenter.View view = mock(ExercisePresenter.View.class);
-        when(view.getName()).thenReturn(Observable.empty());
-        when(view.getWeight()).thenReturn(Observable.empty());
-        when(view.getSaveAction()).thenReturn(Observable.never());
         presenter.onStart(view);
         presenter.onWeightChanged("1.0");
         verify(view).setWeightHint(null);

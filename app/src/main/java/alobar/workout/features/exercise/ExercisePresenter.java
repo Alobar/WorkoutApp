@@ -44,6 +44,7 @@ class ExercisePresenter {
         disposables.add(view.getName().subscribe(this::onNameChanged));
         disposables.add(view.getWeight().subscribe(this::onWeightChanged));
         disposables.add(view.getSaveAction().subscribe(this::onSave));
+        disposables.add(view.getCloseAction().subscribe(this::onClose));
     }
 
     void onStop() {
@@ -108,10 +109,15 @@ class ExercisePresenter {
         view.close();
     }
 
+    void onClose(Object action) {
+        view.close();
+    }
+
     public interface View {
         Observable<String> getName();
         Observable<String> getWeight();
         Observable<SaveAction> getSaveAction();
+        Observable<Object> getCloseAction();
         void setName(String value);
         void setNameHint(String message);
         void setWeight(String value);
