@@ -66,12 +66,12 @@ class ExercisePresenter {
         view.setWeight(Double.toString(exercise.weight));
     }
 
-    void onNameChanged(String value) {
+    private void onNameChanged(String value) {
         Validate.notNull(view);
         view.setNameHint(validateName(value));
     }
 
-    void onWeightChanged(String value) {
+    private void onWeightChanged(String value) {
         Validate.notNull(view);
         view.setWeightHint(validateWeight(value));
     }
@@ -97,7 +97,7 @@ class ExercisePresenter {
         return errors.length() > 0 ? errors.toString() : null;
     }
 
-    void onSave(SaveAction action) {
+    private void onSave(SaveAction action) {
         Validate.notNull(view);
 
         String name = action.name();
@@ -115,7 +115,7 @@ class ExercisePresenter {
         view.close();
     }
 
-    void onClose(Object action) {
+    private void onClose(Object action) {
         Validate.notNull(view);
         view.close();
     }
