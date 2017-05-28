@@ -12,6 +12,7 @@ import io.reactivex.Observable;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -44,17 +45,38 @@ public class ExercisePresenterTests {
     }
 
     @Test
-    public void NameChangeShouldValidate() {
+    public void NameHint_ShouldClearOnValidName() {
+        when(view.getName()).thenReturn(Observable.just("foo"));
         presenter.onStart(view);
-        presenter.onNameChanged("foo");
-        verify(view).setNameHint(null);
+        verify(view, times(1)).setNameHint(null);
     }
 
     @Test
-    public void WeightChangeShouldValidate() {
+    public void NameHint_ShouldHintOnEmptyName() {
+        when(view.getName()).thenReturn(Observable.just(""));
         presenter.onStart(view);
-        presenter.onWeightChanged("1.0");
-        verify(view).setWeightHint(null);
+        verify(view, times(1)).setNameHint(NameRequired);
+    }
+
+    @Test
+    public void WeightHint_ShouldClearOnValidWeight() {
+        when(view.getWeight()).thenReturn(Observable.just("1.0"));
+        presenter.onStart(view);
+        verify(view, times(1)).setWeightHint(null);
+    }
+
+    @Test
+    public void WeightHint_ShouldHintOnEmptyWeight() {
+        when(view.getWeight()).thenReturn(Observable.just(""));
+        presenter.onStart(view);
+        verify(view, times(1)).setWeightHint(WeightRequired);
+    }
+
+    @Test
+    public void WeightHint_ShouldHintOnInvalidWeight() {
+        when(view.getWeight()).thenReturn(Observable.just("foo"));
+        presenter.onStart(view);
+        verify(view, times(1)).setWeightHint(WeightMustBeNumeric);
     }
 
     @Test
