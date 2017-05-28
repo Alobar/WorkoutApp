@@ -4,11 +4,12 @@ import android.content.res.Resources;
 
 import com.google.auto.value.AutoValue;
 
+import org.apache.commons.lang3.Validate;
+
 import javax.inject.Inject;
 
 import alobar.reactivex.RxAssert;
 import alobar.util.MessageBuilder;
-import alobar.util.NullObject;
 import alobar.util.Numbers;
 import alobar.workout.R;
 import alobar.workout.data.Exercise;
@@ -22,7 +23,7 @@ import io.reactivex.disposables.CompositeDisposable;
 class ExercisePresenter {
 
     private final CompositeDisposable disposables = new CompositeDisposable();
-    private View view = NullObject.get(View.class);
+    private View view;
     private long exerciseId;
 
     @Inject
@@ -48,8 +49,8 @@ class ExercisePresenter {
     }
 
     void onStop() {
-        this.view = NullObject.get(View.class);
         disposables.clear();
+        this.view = null;
     }
 
     void setExerciseId(final long id) {
@@ -60,15 +61,18 @@ class ExercisePresenter {
     }
 
     private void showExercise(Exercise exercise) {
+        Validate.notNull(view);
         view.setName(exercise.name);
         view.setWeight(Double.toString(exercise.weight));
     }
 
     void onNameChanged(String value) {
+        Validate.notNull(view);
         view.setNameHint(validateName(value));
     }
 
     void onWeightChanged(String value) {
+        Validate.notNull(view);
         view.setWeightHint(validateWeight(value));
     }
 
@@ -94,6 +98,8 @@ class ExercisePresenter {
     }
 
     void onSave(SaveAction action) {
+        Validate.notNull(view);
+
         String name = action.name();
         String weight = action.weight();
 
@@ -110,6 +116,7 @@ class ExercisePresenter {
     }
 
     void onClose(Object action) {
+        Validate.notNull(view);
         view.close();
     }
 
